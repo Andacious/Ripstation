@@ -1,3 +1,8 @@
+# Disclaimer
+This doc was adapted from <https://www.makemkv.com/developers/usage.txt> simply to be more readable.
+
+# Format
+
 ```
 makemkvcon [options] Command Parameters
 ```
