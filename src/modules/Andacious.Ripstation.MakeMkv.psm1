@@ -8,7 +8,7 @@ function Get-DiskAndTitleInfo
     (
         [switch]$Progress,
         [string]$DiskNumber = '0',
-        [string]$MakeMkvExe = 'C:\Program Files (x86)\MakeMKV\makemkvcon64.exe'
+        [string]$MakeMkvExe = "${env:ProgramFiles(x86)}\MakeMKV\makemkvcon64.exe"
     )
 
     $diskInfo = [ordered]@{}
@@ -69,10 +69,14 @@ function Backup-Title
     (
         [string]$TitleId,
         [string]$OutputPath,
-        [switch]$Progress
+        [switch]$Progress,
+        [string]$DiskNumber = '0',
+        [string]$MakeMkvExe = "${env:ProgramFiles(x86)}\MakeMKV\makemkvcon64.exe"
     )
 
+    $rippingMessage = "Ripping title $TitleId to: $OutputPath"
     $lastRipStatus = ''
+
     & $MakeMkvExe --robot --noscan --cache=1024 --messages=-stdout --progress=-same --minlength=600 mkv disc:$DiskNumber $TitleId $OutputPath | ForEach-Object `
     {
         $line = [string]$_

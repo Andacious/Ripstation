@@ -9,7 +9,8 @@ function Convert-Video
         [string]$InputFile,
         [string]$OutputFile,
         [string]$PresetName = 'Plex',
-        [string]$PresetFile = "$PSScriptRoot\..\..\presets\Plex.json"
+        [string]$PresetFile = "$PSScriptRoot\..\..\presets\Plex.json",
+        [string]$HandBrakeExe = "$env:ProgramFiles\HandBrakeCLI\HandBrakeCLI.exe"
     )
 
     & $HandBrakeExe --preset-import-file $PresetFile -i $InputFile -o $OutputFile --preset $PresetName --json | ForEach-Object `
