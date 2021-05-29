@@ -32,3 +32,19 @@ function Get-MediaFilePath([string]$outputPath, [string]$mediaName, [int]$season
 
     return (Join-Path $path $file)
 }
+
+function Open-DiskDrive
+{
+    [CmdletBinding()]
+    [Alias('eject')]
+    param
+    (
+        [int]$DriveNumber = 0
+    )
+
+    $com = New-Object -com 'WMPlayer.OCX.7'
+    $drive = $com.cdromCollection.item($DriveNumber)
+
+    Write-Verbose "Ejecting disk drive: $($drive.driveSpecifier)"
+    $drive.eject();
+}
