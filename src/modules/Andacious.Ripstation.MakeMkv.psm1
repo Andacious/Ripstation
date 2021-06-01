@@ -1,4 +1,5 @@
 $ErrorActionPreference = 'Stop'
+$InformationPreference = 'Continue'
 Set-StrictMode -Version 3.0
 
 function Get-DiskAndTitleInfo
@@ -104,4 +105,6 @@ function Backup-Title
     {
         throw "MakeMKV execution failed; result code: $LASTEXITCODE"
     }
+
+    Write-Information "MakeMKV execution succeeded; wrote MKV to: $OutputPath"
 }

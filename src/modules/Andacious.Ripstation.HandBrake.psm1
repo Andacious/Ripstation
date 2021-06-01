@@ -1,4 +1,5 @@
 $ErrorActionPreference = 'Stop'
+$InformationPreference = 'Continue'
 Set-StrictMode -Version 3.0
 
 function Convert-Video
@@ -27,4 +28,6 @@ function Convert-Video
     {
         throw "HandBrake execution failed; output file was not created: $OutputFile"
     }
+
+    Write-Information "HandBrake execution succeeded; wrote MP4 to: $OutputFile" 
 }
