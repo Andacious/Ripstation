@@ -7,7 +7,8 @@ param
     [string]$OutputPath = 'S:\Plex\Media\Movies',
     [int]$Season = 0,
     [int]$EpisodeStart = 0,
-    [int]$EpisodeEnd = 0
+    [int]$EpisodeEnd = 0,
+    [switch]$Eject
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,4 +52,9 @@ for ($i = 0; $i -lt $titles.Count; $i++)
     $titleId = $titles[$i]
     $episode = $episodeNumbers[$i]
     Backup-DiskMedia -TitleId $titleId -Episode $episode -MediaName $MediaName -IntermediatePath $IntermediatePath -OutputPath $OutputPath
+}
+
+if ($Eject)
+{
+    Open-DiskDrive
 }
