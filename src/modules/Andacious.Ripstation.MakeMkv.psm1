@@ -58,9 +58,19 @@ function Get-DiskAndTitleInfo
         Write-Progress -Activity $scanningMessage -Completed
     }
 
-    $disk = $diskInfo[$DiskNumber]
+    $titles = @()
 
-    return $disk, $titleInfo
+    foreach ($kvp in $titleInfo.GetEnumerator())
+    {
+        $title = [Title]::new($kvp.Value)
+        $title.Id = $kvp.Key
+        $titles += $title
+    }
+
+    $disk = [Disk]::new($diskInfo[$DiskNumber])
+    $disk.Id = $DiskNumber
+
+    return $disk, $titles
 }
 
 function Backup-Title

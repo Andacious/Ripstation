@@ -1,3 +1,5 @@
+using module .\src\Andacious.Ripstation.psd1
+
 [CmdletBinding()]
 param
 (
@@ -13,23 +15,23 @@ param
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3.0
-Import-Module '.\src\Andacious.Ripstation.psd1' -Force
+Import-Module .\src\Andacious.Ripstation.psd1 -Force
 
 $scanningMessage = "Scanning disk $DiskNumber for titles..."
 Write-Host $scanningMessage -ForegroundColor Cyan
 
 $disk, $titleInfo = Get-DiskAndTitleInfo -DiskNumber $DiskNumber -Progress
 
-Write-Host "Found $($titleInfo.Count) titles on disk $DiskNumber - $($disk['2']):" -ForegroundColor Cyan
+Write-Host "Found $($titleInfo.Count) titles on disk $DiskNumber - $($disk.Name):" -ForegroundColor Cyan
 
-foreach ($kvp in $titleInfo.GetEnumerator())
+foreach ($title in $titleInfo)
 {
-    Write-Host "Title ID $($kvp.Key): $($kvp.Value['27']) - $($kvp.Value['9']) - $($kvp.Value['10']) - $($kvp.Value['8']) chapters"
+    Write-Host "Title ID $($title.Id): $($title.FileName) - $($title.Duration) - $($title.SizeInBytes) - $($title.Chapters) chapters"
 }
 
 if ($titleInfo.Count -eq 1)
 {
-    $titles = ,[string]$titleInfo.Keys[0]
+    $titles = ,[string]$titleInfo[0].Id
     Write-Warning "Only one title was found on disk $diskNumber; defaulting to title $titles"
 }
 else
@@ -44,14 +46,16 @@ $episodeNumbers = ($EpisodeStart..$EpisodeEnd)
 
 if ($episodeNumbers.Count -ne $titles.Count)
 {
-    throw "Episode<->title count mismatch"
+    throw "Episode <-> title count mismatch"
 }
 
 for ($i = 0; $i -lt $titles.Count; $i++)
 {
     $titleId = $titles[$i]
+    $title = $titleInfo | Where-Object -Property Id -EQ $titleId
     $episode = $episodeNumbers[$i]
-    Backup-DiskMedia -TitleId $titleId -Episode $episode -MediaName $MediaName -IntermediatePath $IntermediatePath -OutputPath $OutputPath
+
+    Backup-DiskMedia -Title $title -Disk $disk -Episode $episode -MediaName $MediaName -IntermediatePath $IntermediatePath -OutputPath $OutputPath
 }
 
 if ($Eject)
