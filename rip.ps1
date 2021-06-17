@@ -16,7 +16,7 @@ param
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3.0
 
-if ($psboundparameters.debug.ispresent)
+if ($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug)
 {
     Write-Debug 'Removing Andacious.Ripstation.* modules...'
     Get-Module Andacious.Ripstation.* | Remove-Module -Force
