@@ -15,6 +15,13 @@ param
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3.0
+
+if ($psboundparameters.debug.ispresent)
+{
+    Write-Debug 'Removing Andacious.Ripstation.* modules...'
+    Get-Module Andacious.Ripstation.* | Remove-Module -Force
+}
+
 Import-Module .\src\Andacious.Ripstation.psd1 -Force
 
 $scanningMessage = "Scanning disk $DiskNumber for titles..."

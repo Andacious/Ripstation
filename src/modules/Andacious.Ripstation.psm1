@@ -17,12 +17,12 @@ function Backup-DiskMedia
 
     if (!$MediaName)
     {
-        $name = $title.Name ?? $disk.Name
+        $name = $Title.Name ?? $disk.Name
         $MediaName = Get-TitleFileName $name
     }
     
-    $mkvPath = "$IntermediatePath\$($title.FileName)"
-    Write-Information "Ripping title $($title.Id) - '$MediaName' to: $mkvPath"
+    $mkvPath = "$IntermediatePath\$($Title.FileName)"
+    Write-Information "Ripping title $($Title.Id) - '$MediaName' to: $mkvPath"
     
     if (Test-Path $mkvPath)
     {
@@ -30,10 +30,10 @@ function Backup-DiskMedia
         Remove-Item $mkvPath -Force
     }
     
-    Backup-Title -TitleId $title.Id -OutputPath $IntermediatePath -Progress
+    Backup-Title -TitleId $Title.Id -OutputPath $IntermediatePath -Progress
     
     $m4vPath = Get-MediaFilePath $OutputPath $MediaName $Season $Episode
-    Write-Information "Encoding title $($title.Id) - '$MediaName' to: $m4vPath"
+    Write-Information "Encoding title $($Title.Id) - '$MediaName' to: $m4vPath"
     
     if (Test-Path $m4vPath)
     {
