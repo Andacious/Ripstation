@@ -15,6 +15,7 @@ param
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 3.0
+$PSStyle.Progress.View = 'Classic'
 
 if ($PSBoundParameters.ContainsKey('Debug') -and $PSBoundParameters.Debug)
 {
