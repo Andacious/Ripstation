@@ -66,7 +66,7 @@ function Backup-DiskMedia
 
     if (!$MediaName)
     {
-        $name = $Title.Name ?? $Disk.Name
+        $name = if ($Title.Name) { $Title.Name } else { $Disk.Name }
         $MediaName = Get-TitleFileName $name
     }
 
@@ -84,7 +84,7 @@ function Backup-DiskMedia
 
     if ($PSCmdlet.ShouldProcess("Title $($Title.Id)", 'Rip to MKV'))
     {
-        Backup-Title -TitleId $Title.Id -OutputPath $IntermediatePath -Progress
+        Backup-Title -TitleId $Title.Id -OutputPath $IntermediatePath -DiskNumber $Disk.Id -Progress
     }
 
     $m4vPath = Get-MediaFilePath $OutputPath $MediaName $Season $Episode
