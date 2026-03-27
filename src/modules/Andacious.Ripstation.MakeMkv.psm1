@@ -4,11 +4,41 @@ Set-StrictMode -Version 3.0
 
 function Get-DiskAndTitleInfo
 {
+    <#
+    .SYNOPSIS
+    Scans a disk and retrieves information about all available titles.
+
+    .DESCRIPTION
+    Uses MakeMKV to scan a disk and return detailed information about the disk
+    and all available titles including duration, size, chapters, and filenames.
+
+    .PARAMETER Progress
+    Display progress information during the scan operation.
+
+    .PARAMETER DiskNumber
+    The disk number to scan (default is '0').
+
+    .PARAMETER MakeMkvExe
+    The path to the MakeMKV executable.
+
+    .EXAMPLE
+    $disk, $titles = Get-DiskAndTitleInfo -DiskNumber '0' -Progress
+
+    .OUTPUTS
+    System.Object[]
+    Returns an array containing a Disk object and an array of Title objects.
+    #>
     [CmdletBinding()]
+    [OutputType([System.Object[]])]
     param
     (
         [switch]$Progress,
+
+        [ValidateNotNullOrEmpty()]
         [string]$DiskNumber = '0',
+
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({ Test-Path $_ })]
         [string]$MakeMkvExe = "${env:ProgramFiles(x86)}\MakeMKV\makemkvcon64.exe"
     )
 
@@ -75,46 +105,86 @@ function Get-DiskAndTitleInfo
 
 function Backup-Title
 {
-    [CmdletBinding()]
+    <#
+    .SYNOPSIS
+    Rips a specific title from a disk to an MKV file.
+
+    .DESCRIPTION
+    Uses MakeMKV to rip a specific title from a disk to the specified output path.
+    The title must have been previously scanned using Get-DiskAndTitleInfo.
+
+    .PARAMETER TitleId
+    The ID of the title to rip.
+
+    .PARAMETER OutputPath
+    The directory path where the MKV file will be saved.
+
+    .PARAMETER Progress
+    Display progress information during the ripping operation.
+
+    .PARAMETER DiskNumber
+    The disk number to rip from (default is '0').
+
+    .PARAMETER MakeMkvExe
+    The path to the MakeMKV executable.
+
+    .EXAMPLE
+    Backup-Title -TitleId '0' -OutputPath 'C:\Temp\MKV' -Progress
+    #>
+    [CmdletBinding(SupportsShouldProcess)]
     param
     (
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]$TitleId,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [string]$OutputPath,
+
         [switch]$Progress,
+
+        [ValidateNotNullOrEmpty()]
         [string]$DiskNumber = '0',
+
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({ Test-Path $_ })]
         [string]$MakeMkvExe = "${env:ProgramFiles(x86)}\MakeMKV\makemkvcon64.exe"
     )
 
     $rippingMessage = "Ripping title $TitleId to: $OutputPath"
     $lastRipStatus = ''
 
-    & $MakeMkvExe --robot --noscan --cache=1024 --messages=-stdout --progress=-same --minlength=600 mkv disc:$DiskNumber $TitleId $OutputPath | ForEach-Object `
+    if ($PSCmdlet.ShouldProcess("Title $TitleId from disk $DiskNumber", 'Rip to MKV'))
     {
-        $line = [string]$_
-
-        Write-Debug $line
-
-        if ($Progress -and $line.StartsWith('PRGV') -and $line -match '^PRGV:(?<Current>[0-9]+),(?<Total>[0-9]+),(?<Max>[0-9]+)$')
+        & $MakeMkvExe --robot --noscan --cache=1024 --messages=-stdout --progress=-same --minlength=600 mkv disc:$DiskNumber $TitleId $OutputPath | ForEach-Object `
         {
-            $percent = ([int]$Matches.Total / [int]$Matches.Max) * 100
-            Write-Progress -Activity $rippingMessage -Status $lastRipStatus -PercentComplete $percent
+            $line = [string]$_
+
+            Write-Debug $line
+
+            if ($Progress -and $line.StartsWith('PRGV') -and $line -match '^PRGV:(?<Current>[0-9]+),(?<Total>[0-9]+),(?<Max>[0-9]+)$')
+            {
+                $percent = ([int]$Matches.Total / [int]$Matches.Max) * 100
+                Write-Progress -Activity $rippingMessage -Status $lastRipStatus -PercentComplete $percent
+            }
+            elseif ($Progress -and $line.StartsWith('PRG') -and $line -match '^PRG[CT]:(?<Code>[0-9]+),(?<Id>[0-9]+),"(?<Name>.+)"$')
+            {
+                $lastRipStatus = $Matches.Name
+            }
         }
-        elseif ($Progress -and $line.StartsWith('PRG') -and $line -match '^PRG[CT]:(?<Code>[0-9]+),(?<Id>[0-9]+),"(?<Name>.+)"$')
+
+        if ($Progress)
         {
-            $lastRipStatus = $Matches.Name
+            # Clear the progress bar
+            Write-Progress -Activity $rippingMessage -Completed
         }
-    }
 
-    if ($Progress)
-    {
-        # Clear the progress bar
-        Write-Progress -Activity $rippingMessage -Completed
-    }
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "MakeMKV execution failed; result code: $LASTEXITCODE"
+        }
 
-    if (!$?)
-    {
-        throw "MakeMKV execution failed; result code: $LASTEXITCODE"
+        Write-Information "MakeMKV execution succeeded; wrote MKV to: $OutputPath"
     }
-
-    Write-Information "MakeMKV execution succeeded; wrote MKV to: $OutputPath"
 }

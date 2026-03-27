@@ -51,9 +51,7 @@ PowerShellVersion = '7.1'
 ProcessorArchitecture = 'Amd64'
 
 # Modules that must be imported into the global environment prior to importing this module
-RequiredModules = @('modules\Andacious.Ripstation.HandBrake.psm1', 
-               'modules\Andacious.Ripstation.MakeMkv.psm1', 
-               'modules\Andacious.Ripstation.Utility.psm1')
+# RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -68,21 +66,21 @@ RequiredModules = @('modules\Andacious.Ripstation.HandBrake.psm1',
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('modules\Andacious.Ripstation.HandBrake.psm1', 
-               'modules\Andacious.Ripstation.MakeMkv.psm1', 
+NestedModules = @('modules\Andacious.Ripstation.HandBrake.psm1',
+               'modules\Andacious.Ripstation.MakeMkv.psm1',
                'modules\Andacious.Ripstation.Utility.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = '*'
+FunctionsToExport = @('Backup-DiskMedia', 'Get-DiskAndTitleInfo', 'Backup-Title', 'Convert-Video', 'Get-TitleFileName', 'Get-MediaFilePath', 'Open-DiskDrive')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-CmdletsToExport = '*'
+CmdletsToExport = @()
 
 # Variables to export from this module
 VariablesToExport = '*'
 
 # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-AliasesToExport = '*'
+AliasesToExport = @('eject')
 
 # DSC resources to export from this module
 # DscResourcesToExport = @()
