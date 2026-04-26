@@ -28,10 +28,16 @@ public partial class GlobalSettings : ObservableObject
     private string _presetName = "Plex";
 
     [ObservableProperty]
-    private string _intermediatePath = @"S:\MKV";
+    private string _intermediatePath =
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Ripstation", "Intermediate");
 
     [ObservableProperty]
-    private string _outputPath = @"S:\Plex\Media\Movies";
+    private string _outputPath =
+        Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+            "Ripstation");
 
     /// <summary>Immutable snapshot of current values for use during an operation.</summary>
     public SettingsSnapshot Snapshot() => new(

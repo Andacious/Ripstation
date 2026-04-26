@@ -52,7 +52,8 @@ public class FakeFileSystem : IFileSystem
     public bool FileExists(string path) => _existing.Contains(path);
     public void FileDelete(string path) { _existing.Remove(path); Deleted.Add(path); }
     public void DirectoryCreate(string path) => Created.Add(path);
-    public bool DirectoryExists(string path) => false;
+    // Directories always "exist" in tests — the OS path checks are an integration concern
+    public bool DirectoryExists(string path) => true;
 }
 
 /// <summary>

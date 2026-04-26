@@ -301,9 +301,30 @@ public partial class DriveViewModel : ObservableObject
         // Per-drive subdirectory prevents MKV filename collisions across drives
         var intermediateDir = Path.Combine(s.IntermediatePath, $"disc{DiskNumber}");
 
+        // Pre-flight: ensure the drive/root of both paths is accessible
+        var intermediateRoot = Path.GetPathRoot(s.IntermediatePath);
+        var outputRoot       = Path.GetPathRoot(s.OutputPath);
+
+        if (!string.IsNullOrEmpty(intermediateRoot) && !_fs.DirectoryExists(intermediateRoot))
+        {
+            Log($"[Drive {DiskNumber}] Intermediate path drive '{intermediateRoot}' not found. " +
+                 "Update the 'Intermediate (MKV)' path in settings.");
+            RipStatus = "Failed — path not found";
+            IsRipping = false;
+            return;
+        }
+        if (!string.IsNullOrEmpty(outputRoot) && !_fs.DirectoryExists(outputRoot))
+        {
+            Log($"[Drive {DiskNumber}] Output path drive '{outputRoot}' not found. " +
+                 "Update the 'Output (M4V)' path in settings.");
+            RipStatus = "Failed — path not found";
+            IsRipping = false;
+            return;
+        }
+
         try
         {
-        _fs.DirectoryCreate(intermediateDir);
+            _fs.DirectoryCreate(intermediateDir);
 
             var ripProgress = new Progress<(int Percent, string Status)>(p =>
             {
