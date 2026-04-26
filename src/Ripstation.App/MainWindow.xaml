@@ -395,18 +395,20 @@
                                        Margin="0" VerticalAlignment="Center" DockPanel.Dock="Left" />
                             <Button Content="Clear" HorizontalAlignment="Right"
                                     Style="{StaticResource BrowseButtonStyle}"
-                                    Click="ClearLog_Click" />
+                                    Command="{Binding ClearLogCommand}" />
                         </DockPanel>
-                        <ListBox x:Name="LogListBox"
-                                 ItemsSource="{Binding LogLines}"
+                        <TextBox x:Name="LogTextBox"
+                                 Text="{Binding LogText, Mode=OneWay}"
+                                 IsReadOnly="True"
+                                 AllowDrop="False"
                                  Height="180"
                                  FontFamily="Consolas" FontSize="11"
                                  Background="#1E1E1E" Foreground="#DCDCDC"
                                  BorderThickness="0"
-                                 VirtualizingPanel.IsVirtualizing="True"
-                                 VirtualizingPanel.VirtualizationMode="Recycling"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                                 TextWrapping="NoWrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 Padding="4" />
                     </StackPanel>
                 </Border>
 

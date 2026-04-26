@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -57,20 +56,18 @@ public partial class MainWindow : Window
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (Vm.LogLines is INotifyCollectionChanged notifier)
-            notifier.CollectionChanged += LogLines_CollectionChanged;
+        Vm.PropertyChanged += Vm_PropertyChanged;
     }
 
-    private void LogLines_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void Vm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (LogListBox.Items.Count > 0)
-            LogListBox.ScrollIntoView(LogListBox.Items[^1]);
+        if (e.PropertyName == nameof(MainViewModel.LogText))
+            LogTextBox.ScrollToEnd();
     }
 
     protected override void OnClosed(EventArgs e)
     {
-        if (Vm.LogLines is INotifyCollectionChanged notifier)
-            notifier.CollectionChanged -= LogLines_CollectionChanged;
+        Vm.PropertyChanged -= Vm_PropertyChanged;
         base.OnClosed(e);
     }
 
@@ -128,6 +125,4 @@ public partial class MainWindow : Window
 
     // ── Clear log ─────────────────────────────────────────────────────────────
 
-    private void ClearLog_Click(object sender, RoutedEventArgs e) =>
-        Vm.LogLines.Clear();
 }

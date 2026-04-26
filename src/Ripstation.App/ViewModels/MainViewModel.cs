@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ripstation.Services;
@@ -35,6 +36,11 @@ public partial class MainViewModel : ObservableObject
     // ── Log ───────────────────────────────────────────────────────────────────
 
     public ObservableCollection<string> LogLines { get; } = [];
+
+    private readonly StringBuilder _logBuilder = new();
+
+    [ObservableProperty]
+    private string _logText = string.Empty;
 
     // ── Constructor ───────────────────────────────────────────────────────────
 
@@ -187,6 +193,14 @@ public partial class MainViewModel : ObservableObject
 
     // ── Log ───────────────────────────────────────────────────────────────────
 
+    [RelayCommand]
+    private void ClearLog()
+    {
+        LogLines.Clear();
+        _logBuilder.Clear();
+        LogText = string.Empty;
+    }
+
     /// <summary>
     /// Thread-safe log append, capped at MaxLogLines. Safe to call from
     /// background threads — dispatches to the UI thread without blocking.
@@ -196,9 +210,23 @@ public partial class MainViewModel : ObservableObject
         var line = $"[{DateTime.Now:HH:mm:ss}] {message}";
         _dispatcher.Post(() =>
         {
+            bool trimmed = false;
             while (LogLines.Count >= MaxLogLines)
+            {
                 LogLines.RemoveAt(0);
+                trimmed = true;
+            }
             LogLines.Add(line);
+            if (trimmed)
+            {
+                _logBuilder.Clear();
+                foreach (var l in LogLines) _logBuilder.AppendLine(l);
+            }
+            else
+            {
+                _logBuilder.AppendLine(line);
+            }
+            LogText = _logBuilder.ToString();
         });
     }
 }
