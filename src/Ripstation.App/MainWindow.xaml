@@ -10,10 +10,6 @@
         Loaded="OnLoaded">
 
     <Window.Resources>
-        <Style x:Key="PathRowStyle" TargetType="Grid">
-            <Setter Property="Margin" Value="0,0,0,10" />
-        </Style>
-
         <!-- Close button for tab header -->
         <Style x:Key="TabCloseButtonStyle" TargetType="Button">
             <Setter Property="Width" Value="16" />
@@ -213,6 +209,47 @@
         <!-- ═══ HEADER BAR ══════════════════════════════════════════════════ -->
         <Border Grid.Row="0" Background="{DynamicResource AccentBrush}">
             <DockPanel Margin="20,0">
+                <Button Content="⚙  Settings" DockPanel.Dock="Right"
+                        Click="OpenSettings_Click"
+                        VerticalAlignment="Center"
+                        Padding="12,6" Margin="0,0,0,0"
+                        Background="Transparent" BorderThickness="1"
+                        BorderBrush="#CCE4FF" Foreground="White"
+                        Cursor="Hand" FontSize="12">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="BorderBrush" Value="#CCE4FF" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Cursor" Value="Hand" />
+                            <Setter Property="FontSize" Value="12" />
+                            <Setter Property="Padding" Value="12,6" />
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="4"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#33FFFFFF" />
+                                            </Trigger>
+                                            <Trigger Property="IsPressed" Value="True">
+                                                <Setter Property="Background" Value="#55FFFFFF" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
                 <TextBlock Text="Ripstation"
                            FontSize="20" FontWeight="Bold"
                            Foreground="White"
@@ -229,111 +266,6 @@
                       VerticalScrollBarVisibility="Auto" Padding="20,16,20,4"
                       PreviewMouseWheel="MainScrollViewer_PreviewMouseWheel">
             <StackPanel>
-
-                <!-- ── GLOBAL: Tool Paths ─────────────────────────────────── -->
-                <Border Style="{StaticResource CardStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Tool Paths" Style="{StaticResource SectionHeaderStyle}" />
-
-                        <!-- MakeMKV -->
-                        <Grid Style="{StaticResource PathRowStyle}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="MakeMKV CLI" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.MakeMkvExePath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Column="3" Content="Browse…"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Click="BrowseMakeMkv_Click" />
-                        </Grid>
-
-                        <!-- HandBrake -->
-                        <Grid Style="{StaticResource PathRowStyle}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="HandBrakeCLI" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.HandBrakeExePath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Column="3" Content="Browse…"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Click="BrowseHandBrake_Click" />
-                        </Grid>
-
-                        <!-- Preset file -->
-                        <Grid Style="{StaticResource PathRowStyle}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Preset File" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.PresetFilePath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Column="3" Content="Browse…"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Click="BrowsePreset_Click" />
-                        </Grid>
-
-                        <!-- Preset name -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="240" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Preset Name" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.PresetName, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <!-- ── GLOBAL: Output Paths ──────────────────────────────── -->
-                <Border Style="{StaticResource CardStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Output Paths" Style="{StaticResource SectionHeaderStyle}" />
-
-                        <!-- Intermediate -->
-                        <Grid Style="{StaticResource PathRowStyle}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Intermediate (MKV)" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.IntermediatePath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Column="3" Content="Browse…"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Click="BrowseIntermediate_Click" />
-                        </Grid>
-
-                        <!-- Output -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="130" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="8" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Output (M4V)" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="1"
-                                     Text="{Binding Settings.OutputPath, UpdateSourceTrigger=PropertyChanged}" />
-                            <Button Grid.Column="3" Content="Browse…"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Click="BrowseOutput_Click" />
-                        </Grid>
-                    </StackPanel>
-                </Border>
 
                 <!-- ── DRIVES (TabControl) ───────────────────────────────── -->
                 <Border Style="{StaticResource CardStyle}" Padding="0">

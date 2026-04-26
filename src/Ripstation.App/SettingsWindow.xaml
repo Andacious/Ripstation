@@ -1,0 +1,133 @@
+<Window x:Class="Ripstation.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings"
+        Width="660"
+        SizeToContent="Height"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource AppBackgroundBrush}">
+
+    <Window.Resources>
+        <Style x:Key="PathRowStyle" TargetType="Grid">
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Margin="20,16,20,20">
+
+        <!-- ── Tool Paths ──────────────────────────────────────────────── -->
+        <Border Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <TextBlock Text="Tool Paths" Style="{StaticResource SectionHeaderStyle}" />
+
+                <!-- MakeMKV -->
+                <Grid Style="{StaticResource PathRowStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="MakeMKV CLI" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding MakeMkvExePath, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="3" Content="Browse…"
+                            Style="{StaticResource BrowseButtonStyle}"
+                            Click="BrowseMakeMkv_Click" />
+                </Grid>
+
+                <!-- HandBrake -->
+                <Grid Style="{StaticResource PathRowStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="HandBrakeCLI" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding HandBrakeExePath, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="3" Content="Browse…"
+                            Style="{StaticResource BrowseButtonStyle}"
+                            Click="BrowseHandBrake_Click" />
+                </Grid>
+
+                <!-- Preset file -->
+                <Grid Style="{StaticResource PathRowStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Preset File" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding PresetFilePath, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="3" Content="Browse…"
+                            Style="{StaticResource BrowseButtonStyle}"
+                            Click="BrowsePreset_Click" />
+                </Grid>
+
+                <!-- Preset name -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="240" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Preset Name" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding PresetName, UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- ── Output Paths ────────────────────────────────────────────── -->
+        <Border Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <TextBlock Text="Output Paths" Style="{StaticResource SectionHeaderStyle}" />
+
+                <!-- Intermediate -->
+                <Grid Style="{StaticResource PathRowStyle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Intermediate (MKV)" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding IntermediatePath, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="3" Content="Browse…"
+                            Style="{StaticResource BrowseButtonStyle}"
+                            Click="BrowseIntermediate_Click" />
+                </Grid>
+
+                <!-- Output -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="130" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Output (M4V)" Style="{StaticResource LabelStyle}" />
+                    <TextBox Grid.Column="1"
+                             Text="{Binding OutputPath, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="3" Content="Browse…"
+                            Style="{StaticResource BrowseButtonStyle}"
+                            Click="BrowseOutput_Click" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- ── Close ──────────────────────────────────────────────────── -->
+        <Button Content="Close"
+                Style="{StaticResource BrowseButtonStyle}"
+                HorizontalAlignment="Right"
+                Width="90"
+                Margin="0,4,0,0"
+                Click="Close_Click" />
+
+    </StackPanel>
+</Window>
