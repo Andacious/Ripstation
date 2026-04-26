@@ -363,6 +363,7 @@
 
                         <TabControl ItemsSource="{Binding Drives}"
                                     ContentTemplate="{StaticResource DriveTabContentTemplate}"
+                                    SelectedIndex="0"
                                     Margin="8,8,8,8"
                                     MinHeight="520">
                             <TabControl.ItemTemplate>
