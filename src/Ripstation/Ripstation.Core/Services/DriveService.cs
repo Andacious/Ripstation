@@ -24,6 +24,19 @@ public class DriveService : IDriveService
         }
     }
 
+    public string GetVolumeLabel(string drivePath)
+    {
+        try
+        {
+            var info = new DriveInfo(drivePath);
+            return info.IsReady ? (info.VolumeLabel ?? string.Empty) : string.Empty;
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
     public IReadOnlyList<(int DiscIndex, string DrivePath)> GetOpticalDrives()
     {
         return DriveInfo.GetDrives()

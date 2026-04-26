@@ -161,6 +161,14 @@ public partial class DriveViewModel : ObservableObject
         _sharedLog = sharedLog;
         _fs = fileSystem ?? new FileSystem();
 
+        // Show the OS volume label immediately so the tab has a name before scanning
+        if (!string.IsNullOrEmpty(driveLetter))
+        {
+            var label = driveService.GetVolumeLabel(driveLetter);
+            if (!string.IsNullOrEmpty(label))
+                _discName = label;
+        }
+
         Titles.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasTitles));
 
         // Refresh CanExecute when global settings change (e.g. user changes HandBrake path)

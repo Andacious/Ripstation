@@ -16,4 +16,10 @@ public interface IDriveService
     /// enumeration order that typically matches the MakeMKV disc: index.
     /// </summary>
     IReadOnlyList<(int DiscIndex, string DrivePath)> GetOpticalDrives();
+
+    /// <summary>
+    /// Returns the Windows volume label for the given drive path (e.g. "D:\"),
+    /// or an empty string if the drive has no disc or the label is unavailable.
+    /// </summary>
+    string GetVolumeLabel(string drivePath);
 }
