@@ -207,5 +207,99 @@
             <Setter Property="BorderThickness" Value="0" />
         </Style>
 
+        <!-- ── TabControl ───────────────────────────────────────────────────── -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background"      Value="{DynamicResource CardBackgroundBrush}" />
+            <Setter Property="BorderBrush"     Value="{DynamicResource CardBorderBrush}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding"         Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid SnapsToDevicePixels="True" KeyboardNavigation.TabNavigation="Local">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <!-- Tab strip -->
+                            <Border Grid.Row="0"
+                                    Background="{DynamicResource AppBackgroundBrush}"
+                                    BorderBrush="{DynamicResource CardBorderBrush}"
+                                    BorderThickness="0,0,0,1">
+                                <TabPanel x:Name="HeaderPanel"
+                                          IsItemsHost="True"
+                                          Background="Transparent"
+                                          KeyboardNavigation.TabIndex="1" />
+                            </Border>
+                            <!-- Content pane -->
+                            <Border Grid.Row="1"
+                                    Background="{TemplateBinding Background}"
+                                    KeyboardNavigation.DirectionalNavigation="Contained"
+                                    KeyboardNavigation.TabNavigation="Local"
+                                    KeyboardNavigation.TabIndex="2">
+                                <ContentPresenter x:Name="PART_SelectedContentHost"
+                                                  ContentSource="SelectedContent"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ── TabItem ──────────────────────────────────────────────────────── -->
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground"  Value="{DynamicResource MutedTextBrush}" />
+            <Setter Property="Background"  Value="Transparent" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+            <Setter Property="Padding"     Value="14,8,14,8" />
+            <Setter Property="FontSize"    Value="13" />
+            <Setter Property="Cursor"      Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid x:Name="Root" SnapsToDevicePixels="True" Margin="0,0,2,0">
+                            <Grid.RowDefinitions>
+                                <!-- Accent indicator bar -->
+                                <RowDefinition Height="3" />
+                                <!-- Tab body -->
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border x:Name="AccentBar" Grid.Row="0"
+                                    Background="Transparent"
+                                    CornerRadius="2,2,0,0" />
+                            <Border x:Name="TabBody" Grid.Row="1"
+                                    Background="{TemplateBinding Background}"
+                                    Padding="{TemplateBinding Padding}"
+                                    CornerRadius="4,4,0,0">
+                                <ContentPresenter ContentSource="Header"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!-- Selected -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="AccentBar" Property="Background"  Value="{DynamicResource AccentBrush}" />
+                                <Setter TargetName="TabBody"   Property="Background"  Value="{DynamicResource CardBackgroundBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource HeaderTextBrush}" />
+                                <Setter Property="Panel.ZIndex" Value="1" />
+                            </Trigger>
+                            <!-- Hover (unselected only) -->
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True" />
+                                    <Condition Property="IsSelected"  Value="False" />
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TabBody" Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>
