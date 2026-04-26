@@ -12,6 +12,7 @@ public partial class DriveViewModel : ObservableObject
     private readonly IHandBrakeService _handBrake;
     private readonly IMediaNamingService _naming;
     private readonly IDriveService _driveService;
+    private readonly IFileSystem _fs;
     private readonly Action<string> _sharedLog;
 
     private CancellationTokenSource? _scanCts;
@@ -140,7 +141,8 @@ public partial class DriveViewModel : ObservableObject
         IMediaNamingService naming,
         IDriveService driveService,
         Action<string> sharedLog,
-        string driveLetter = "")
+        string driveLetter = "",
+        IFileSystem? fileSystem = null)
     {
         _diskNumber = diskNumber;
         _wmpDriveIndex = diskNumber;
@@ -151,6 +153,7 @@ public partial class DriveViewModel : ObservableObject
         _naming = naming;
         _driveService = driveService;
         _sharedLog = sharedLog;
+        _fs = fileSystem ?? new FileSystem();
 
         // Refresh CanExecute when global settings change (e.g. user changes HandBrake path)
         _settings.PropertyChanged += (_, _) =>
@@ -292,7 +295,7 @@ public partial class DriveViewModel : ObservableObject
 
         try
         {
-            Directory.CreateDirectory(intermediateDir);
+        _fs.DirectoryCreate(intermediateDir);
 
             var ripProgress = new Progress<(int Percent, string Status)>(p =>
             {
@@ -326,13 +329,13 @@ public partial class DriveViewModel : ObservableObject
                     IsTvMode ? Season : 0,
                     episode);
 
-                if (File.Exists(m4vPath))
+                if (_fs.FileExists(m4vPath))
                 {
                     Log($"[Drive {DiskNumber}] Deleting existing: {m4vPath}");
-                    File.Delete(m4vPath);
+                    _fs.FileDelete(m4vPath);
                 }
 
-                Directory.CreateDirectory(Path.GetDirectoryName(m4vPath)!);
+                _fs.DirectoryCreate(Path.GetDirectoryName(m4vPath)!);
 
                 // ── 3. Encode ─────────────────────────────────────────────
                 Log($"[Drive {DiskNumber}] [{i + 1}/{selected.Count}] Encoding → {m4vPath}");
@@ -346,9 +349,9 @@ public partial class DriveViewModel : ObservableObject
                     ripProgress, Log, ct);
 
                 // ── 4. Clean up intermediate MKV ──────────────────────────
-                if (File.Exists(actualMkv))
+                if (_fs.FileExists(actualMkv))
                 {
-                    File.Delete(actualMkv);
+                    _fs.FileDelete(actualMkv);
                     Log($"[Drive {DiskNumber}] Deleted: {actualMkv}");
                 }
 
@@ -452,7 +455,9 @@ public partial class DriveViewModel : ObservableObject
         if (selected.Count == 0) yield break;
 
         var episodes = IsTvMode
-            ? Enumerable.Range(EpisodeStart, EpisodeEnd - EpisodeStart + 1).ToList()
+            ? (EpisodeEnd >= EpisodeStart
+                ? Enumerable.Range(EpisodeStart, EpisodeEnd - EpisodeStart + 1).ToList()
+                : [])
             : selected.Select(_ => 0).ToList();
 
         if (episodes.Count != selected.Count) yield break;

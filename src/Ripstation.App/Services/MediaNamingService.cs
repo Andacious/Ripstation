@@ -18,7 +18,7 @@ public partial class MediaNamingService : IMediaNamingService
         var safe = Regex.Replace(fileName, pattern, string.Empty);
 
         var spaced = safe.Replace('_', ' ');
-        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(spaced.ToLower());
+        return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(spaced.ToLowerInvariant());
     }
 
     public string GetMediaFilePath(string outputPath, string mediaName, int season, int episode)

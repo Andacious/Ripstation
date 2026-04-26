@@ -2,8 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace Ripstation.Services;
 
-public partial class HandBrakeService(IProcessRunner processRunner) : IHandBrakeService
+public partial class HandBrakeService(IProcessRunner processRunner, IFileSystem? fileSystem = null) : IHandBrakeService
 {
+    private readonly IFileSystem _fs = fileSystem ?? new FileSystem();
     // HandBrake --json emits lines like:
     // {"State":"WORKING","Working":{"Progress":0.12345,...}}
     [GeneratedRegex(@"""Progress"":\s*([\d.]+)")]
@@ -56,7 +57,7 @@ public partial class HandBrakeService(IProcessRunner processRunner) : IHandBrake
         if (result.Cancelled) ct.ThrowIfCancellationRequested();
         if (result.ExitCode != 0)
             throw new InvalidOperationException($"HandBrake exited with code {result.ExitCode}");
-        if (!File.Exists(outputFile))
+        if (!_fs.FileExists(outputFile))
             throw new FileNotFoundException($"HandBrake did not produce output: {outputFile}", outputFile);
 
         log($"HandBrake wrote: {outputFile}");

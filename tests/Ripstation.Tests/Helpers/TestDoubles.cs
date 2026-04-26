@@ -1,0 +1,81 @@
+using NSubstitute;
+using Ripstation.Services;
+
+namespace Ripstation.Tests.Helpers;
+
+/// <summary>
+/// Fake IProcessRunner that lets tests specify lines to deliver on stdout and
+/// a controlled exit code. Calls the stdout handler synchronously for each line.
+/// </summary>
+public class FakeProcessRunner : IProcessRunner
+{
+    private readonly IReadOnlyList<string> _stdoutLines;
+    private readonly int _exitCode;
+    private readonly bool _cancelled;
+
+    public FakeProcessRunner(IEnumerable<string> stdoutLines, int exitCode = 0, bool cancelled = false)
+    {
+        _stdoutLines = stdoutLines.ToList();
+        _exitCode = exitCode;
+        _cancelled = cancelled;
+    }
+
+    public Task<ProcessResult> RunAsync(
+        string exe,
+        string arguments,
+        Action<string>? onStdout,
+        Action<string>? onStderr,
+        CancellationToken ct)
+    {
+        foreach (var line in _stdoutLines)
+            onStdout?.Invoke(line);
+
+        return Task.FromResult(new ProcessResult(_exitCode, _cancelled));
+    }
+}
+
+/// <summary>
+/// Fake IFileSystem that tracks which paths "exist" and which operations were called.
+/// </summary>
+public class FakeFileSystem : IFileSystem
+{
+    private readonly HashSet<string> _existing;
+
+    public List<string> Deleted { get; } = [];
+    public List<string> Created { get; } = [];
+
+    public FakeFileSystem(params string[] existingPaths)
+    {
+        _existing = new HashSet<string>(existingPaths, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public bool FileExists(string path) => _existing.Contains(path);
+    public void FileDelete(string path) { _existing.Remove(path); Deleted.Add(path); }
+    public void DirectoryCreate(string path) => Created.Add(path);
+    public bool DirectoryExists(string path) => false;
+}
+
+/// <summary>
+/// Fake IUiDispatcher that runs actions synchronously (suitable for tests).
+/// </summary>
+public class SynchronousDispatcher : IUiDispatcher
+{
+    public void Post(Action action) => action();
+}
+
+/// <summary>
+/// Fake IDriveService with configurable optical drives.
+/// </summary>
+public class FakeDriveService : IDriveService
+{
+    private readonly IReadOnlyList<(int DiscIndex, string DrivePath)> _drives;
+    public List<int> EjectedIndices { get; } = [];
+
+    public FakeDriveService(params (int DiscIndex, string DrivePath)[] drives)
+    {
+        _drives = drives;
+    }
+
+    public void EjectDrive(int wmpCdRomIndex) => EjectedIndices.Add(wmpCdRomIndex);
+    public IReadOnlyList<(int DiscIndex, string DrivePath)> GetOpticalDrives() => _drives;
+}

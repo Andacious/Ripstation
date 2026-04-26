@@ -3,8 +3,9 @@ using Ripstation.Models;
 
 namespace Ripstation.Services;
 
-public partial class MakeMkvService(IProcessRunner processRunner) : IMakeMkvService
+public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? fileSystem = null) : IMakeMkvService
 {
+    private readonly IFileSystem _fs = fileSystem ?? new FileSystem();
     // CINFO:code,flags,"value"
     [GeneratedRegex(@"^CINFO:(?<Code>\d+),(?<Flags>\d+),""(?<Value>.+)""$")]
     private static partial Regex CInfoRegex();
@@ -155,7 +156,7 @@ public partial class MakeMkvService(IProcessRunner processRunner) : IMakeMkvServ
         if (writtenFile is null)
             throw new InvalidOperationException("MakeMKV did not report an output filename");
 
-        if (!File.Exists(writtenFile))
+        if (!_fs.FileExists(writtenFile))
             throw new FileNotFoundException($"Expected MKV not found: {writtenFile}", writtenFile);
 
         log($"MakeMKV wrote: {writtenFile}");

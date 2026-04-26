@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ripstation.Services;
@@ -12,7 +11,7 @@ public partial class MainViewModel : ObservableObject
     private readonly IHandBrakeService _handBrake;
     private readonly IMediaNamingService _naming;
     private readonly IDriveService _driveService;
-    private readonly Dispatcher _dispatcher;
+    private readonly IUiDispatcher _dispatcher;
 
     private CancellationTokenSource? _ripAllCts;
 
@@ -43,13 +42,14 @@ public partial class MainViewModel : ObservableObject
         IMakeMkvService makeMkv,
         IHandBrakeService handBrake,
         IMediaNamingService naming,
-        IDriveService driveService)
+        IDriveService driveService,
+        IUiDispatcher? dispatcher = null)
     {
         _makeMkv = makeMkv;
         _handBrake = handBrake;
         _naming = naming;
         _driveService = driveService;
-        _dispatcher = Dispatcher.CurrentDispatcher;
+        _dispatcher = dispatcher ?? new WpfDispatcher(System.Windows.Threading.Dispatcher.CurrentDispatcher);
 
         // Populate drives from attached optical drives; fall back to two defaults
         var detected = _driveService.GetOpticalDrives();
@@ -194,7 +194,7 @@ public partial class MainViewModel : ObservableObject
     public void LogFromThread(string message)
     {
         var line = $"[{DateTime.Now:HH:mm:ss}] {message}";
-        _dispatcher.InvokeAsync(() =>
+        _dispatcher.Post(() =>
         {
             while (LogLines.Count >= MaxLogLines)
                 LogLines.RemoveAt(0);
