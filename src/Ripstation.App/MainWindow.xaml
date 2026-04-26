@@ -6,7 +6,7 @@
         Width="1100" Height="860"
         MinWidth="820" MinHeight="620"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource AppBackgroundBrush}"
+        Background="{DynamicResource AppBackgroundBrush}"
         Loaded="OnLoaded">
 
     <Window.Resources>
@@ -24,7 +24,7 @@
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="#666666" />
+            <Setter Property="Foreground" Value="{DynamicResource TabCloseForegroundBrush}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -36,8 +36,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#FFDDDD" />
-                                <Setter Property="Foreground" Value="#C42B1C" />
+                                <Setter Property="Background" Value="{DynamicResource TabCloseHoverBgBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -84,7 +84,7 @@
                                     <ProgressBar Width="160" Value="{Binding ScanProgress, Mode=OneWay}"
                                                  Minimum="0" Maximum="100" Margin="0,0,8,0" />
                                     <TextBlock Text="{Binding ScanStatus}" FontSize="12"
-                                               Foreground="{StaticResource MutedTextBrush}"
+                                               Foreground="{DynamicResource MutedTextBrush}"
                                                VerticalAlignment="Center" />
                                 </StackPanel>
                             </Grid>
@@ -92,13 +92,13 @@
                             <!-- Disc name after scan -->
                             <TextBlock Text="{Binding DiscName}"
                                        FontSize="13" FontWeight="SemiBold"
-                                       Foreground="{StaticResource AccentBrush}"
+                                       Foreground="{DynamicResource AccentBrush}"
                                        Margin="0,10,0,0"
                                        Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
 
                             <!-- Scan complete status -->
                             <TextBlock Text="{Binding ScanStatus}"
-                                       FontSize="12" Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}"
                                        Margin="0,6,0,0"
                                        Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
                         </StackPanel>
@@ -133,7 +133,7 @@
                             </DataGrid>
 
                             <TextBlock Text="{Binding SelectedTitleCount, StringFormat='{}{0} title(s) selected'}"
-                                       FontSize="12" Foreground="{StaticResource MutedTextBrush}" Margin="0,8,0,0" />
+                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0" />
                         </StackPanel>
                     </Border>
 
@@ -205,12 +205,12 @@
                                 <ProgressBar Grid.Row="0" Value="{Binding RipProgress, Mode=OneWay}"
                                              Minimum="0" Maximum="100" Margin="0,0,0,4" />
                                 <TextBlock Grid.Row="1" Text="{Binding RipStatus}"
-                                           FontSize="12" Foreground="{StaticResource MutedTextBrush}" />
+                                           FontSize="12" Foreground="{DynamicResource MutedTextBrush}" />
                             </Grid>
 
                             <!-- Done / cancelled status when idle -->
                             <TextBlock Text="{Binding RipStatus}"
-                                       FontSize="12" Foreground="{StaticResource MutedTextBrush}"
+                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}"
                                        Visibility="{Binding IsRipping, Converter={StaticResource InvBoolToVis}}" />
                         </StackPanel>
                     </Border>
@@ -229,7 +229,7 @@
         </Grid.RowDefinitions>
 
         <!-- ═══ HEADER BAR ══════════════════════════════════════════════════ -->
-        <Border Grid.Row="0" Background="{StaticResource AccentBrush}">
+        <Border Grid.Row="0" Background="{DynamicResource AccentBrush}">
             <DockPanel Margin="20,0">
                 <TextBlock Text="Ripstation"
                            FontSize="20" FontWeight="Bold"
@@ -425,9 +425,9 @@
         </ScrollViewer>
 
         <!-- ═══ STATUS BAR ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Background="#E8E8E8" BorderBrush="#D0D0D0"
+        <Border Grid.Row="2" Background="{DynamicResource StatusBarBrush}" BorderBrush="{DynamicResource StatusBarBorderBrush}"
                 BorderThickness="0,1,0,0" Padding="16,4">
-            <TextBlock FontSize="11" Foreground="{StaticResource MutedTextBrush}">
+            <TextBlock FontSize="11" Foreground="{DynamicResource MutedTextBrush}">
                 <Run Text="{Binding Drives.Count, StringFormat='{}{0} drive(s)', Mode=OneWay}" />
                 <Run Text=" · " />
                 <Run Text="{Binding Settings.OutputPath, Mode=OneWay}" />
