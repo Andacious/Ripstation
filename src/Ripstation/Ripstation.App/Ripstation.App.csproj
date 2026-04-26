@@ -25,7 +25,7 @@
 
   <ItemGroup>
     <!-- Ship the Plex preset alongside the app binary -->
-    <Content Include="..\..\presets\Plex.json">
+    <Content Include="..\..\..\presets\Plex.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>presets\Plex.json</TargetPath>
     </Content>
