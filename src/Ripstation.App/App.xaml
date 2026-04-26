@@ -149,6 +149,8 @@
             <Setter Property="RowHeaderWidth" Value="0" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource HeaderTextBrush}" />
+            <Setter Property="RowBackground" Value="{DynamicResource SurfaceBrush}" />
             <Setter Property="AlternatingRowBackground" Value="{DynamicResource DataGridAltRowBrush}" />
         </Style>
 
@@ -165,6 +167,7 @@
         <Style TargetType="DataGridCell">
             <Setter Property="Padding" Value="8,4" />
             <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{DynamicResource HeaderTextBrush}" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="{DynamicResource SelectionBrush}" />
@@ -175,6 +178,8 @@
         </Style>
 
         <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource HeaderTextBrush}" />
             <Setter Property="MinHeight" Value="32" />
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
