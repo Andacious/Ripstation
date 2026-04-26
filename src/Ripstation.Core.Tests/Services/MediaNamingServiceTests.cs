@@ -1,6 +1,6 @@
 using Ripstation.Services;
 
-namespace Ripstation.Tests.Services;
+namespace Ripstation.Core.Tests.Services;
 
 public class MediaNamingServiceTests
 {

@@ -1,10 +1,10 @@
 using NSubstitute;
 using Ripstation.Models;
 using Ripstation.Services;
-using Ripstation.Tests.Helpers;
 using Ripstation.ViewModels;
+using RipstationApp.Tests.Helpers;
 
-namespace Ripstation.Tests.ViewModels;
+namespace RipstationApp.Tests.ViewModels;
 
 public class DriveViewModelTests
 {
@@ -373,8 +373,8 @@ public class DriveViewModelTests
         makeMkv.ScanDiskAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<IProgress<(int, string)>?>(), Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult((
-                new Ripstation.Models.Disk { Name = "BLADE_RUNNER_2049" },
-                new List<Ripstation.Models.Title> { new() { Id = 0, Name = "Title 1" } }
+                new Disk { Name = "BLADE_RUNNER_2049" },
+                new List<Title> { new() { Id = 0, Name = "Title 1" } }
             )));
 
         var vm = BuildDrive(makeMkv: makeMkv);
@@ -395,7 +395,7 @@ public class DriveViewModelTests
             .Returns(callInfo =>
             {
                 var ct = callInfo.ArgAt<CancellationToken>(4);
-                var tcs = new TaskCompletionSource<(Ripstation.Models.Disk, List<Ripstation.Models.Title>)>();
+                var tcs = new TaskCompletionSource<(Disk, List<Title>)>();
                 ct.Register(() => tcs.TrySetException(new OperationCanceledException(ct)));
                 return tcs.Task;
             });
@@ -416,8 +416,8 @@ public class DriveViewModelTests
         var makeMkv = Substitute.For<IMakeMkvService>();
         makeMkv.ScanDiskAsync(Arg.Any<string>(), Arg.Any<string>(),
                 Arg.Any<IProgress<(int, string)>?>(), Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
-            .Returns<Task<(Ripstation.Models.Disk, List<Ripstation.Models.Title>)>>(
-                _ => Task.FromException<(Ripstation.Models.Disk, List<Ripstation.Models.Title>)>(
+            .Returns<Task<(Disk, List<Title>)>>(
+                _ => Task.FromException<(Disk, List<Title>)>(
                     new InvalidOperationException("Drive not found")));
 
         var vm = BuildDrive(makeMkv: makeMkv);

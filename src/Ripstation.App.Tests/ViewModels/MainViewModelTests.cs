@@ -1,9 +1,10 @@
 using NSubstitute;
+using Ripstation.Models;
 using Ripstation.Services;
-using Ripstation.Tests.Helpers;
 using Ripstation.ViewModels;
+using RipstationApp.Tests.Helpers;
 
-namespace Ripstation.Tests.ViewModels;
+namespace RipstationApp.Tests.ViewModels;
 
 public class MainViewModelTests
 {
@@ -23,7 +24,7 @@ public class MainViewModelTests
 
     private static TitleViewModel MakeSelectedTitle(int id = 0)
     {
-        var vm = new TitleViewModel(new Ripstation.Models.Title { Id = id, Name = $"Title {id}" });
+        var vm = new TitleViewModel(new Title { Id = id, Name = $"Title {id}" });
         vm.IsSelected = true;
         return vm;
     }

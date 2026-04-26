@@ -18,6 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ripstation.Core\Ripstation.Core.csproj" />
+    <ProjectReference Include="..\Ripstation.Abstractions\Ripstation.Abstractions.csproj" />
+    <ProjectReference Include="..\Ripstation.Models\Ripstation.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Ship the Plex preset alongside the app binary -->
     <Content Include="..\..\presets\Plex.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

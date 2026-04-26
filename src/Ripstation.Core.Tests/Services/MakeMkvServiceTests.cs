@@ -1,8 +1,8 @@
+using Ripstation.Core.Tests.Helpers;
 using Ripstation.Models;
 using Ripstation.Services;
-using Ripstation.Tests.Helpers;
 
-namespace Ripstation.Tests.Services;
+namespace Ripstation.Core.Tests.Services;
 
 public class MakeMkvServiceTests
 {

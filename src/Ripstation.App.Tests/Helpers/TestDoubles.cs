@@ -1,38 +1,6 @@
-using NSubstitute;
 using Ripstation.Services;
 
-namespace Ripstation.Tests.Helpers;
-
-/// <summary>
-/// Fake IProcessRunner that lets tests specify lines to deliver on stdout and
-/// a controlled exit code. Calls the stdout handler synchronously for each line.
-/// </summary>
-public class FakeProcessRunner : IProcessRunner
-{
-    private readonly IReadOnlyList<string> _stdoutLines;
-    private readonly int _exitCode;
-    private readonly bool _cancelled;
-
-    public FakeProcessRunner(IEnumerable<string> stdoutLines, int exitCode = 0, bool cancelled = false)
-    {
-        _stdoutLines = stdoutLines.ToList();
-        _exitCode = exitCode;
-        _cancelled = cancelled;
-    }
-
-    public Task<ProcessResult> RunAsync(
-        string exe,
-        string arguments,
-        Action<string>? onStdout,
-        Action<string>? onStderr,
-        CancellationToken ct)
-    {
-        foreach (var line in _stdoutLines)
-            onStdout?.Invoke(line);
-
-        return Task.FromResult(new ProcessResult(_exitCode, _cancelled));
-    }
-}
+namespace RipstationApp.Tests.Helpers;
 
 /// <summary>
 /// Fake IFileSystem that tracks which paths "exist" and which operations were called.

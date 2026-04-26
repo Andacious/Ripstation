@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Ripstation.Abstractions/Ripstation.Abstractions.csproj" />
+    <Project Path="src/Ripstation.App.Tests/Ripstation.App.Tests.csproj" />
+    <Project Path="src/Ripstation.App/Ripstation.App.csproj" />
+    <Project Path="src/Ripstation.Core.Tests/Ripstation.Core.Tests.csproj" />
+    <Project Path="src/Ripstation.Core/Ripstation.Core.csproj" />
+    <Project Path="src/Ripstation.Models.Tests/Ripstation.Models.Tests.csproj" />
+    <Project Path="src/Ripstation.Models/Ripstation.Models.csproj" />
+  </Folder>
+</Solution>

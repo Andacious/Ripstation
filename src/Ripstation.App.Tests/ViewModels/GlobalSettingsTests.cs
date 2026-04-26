@@ -1,6 +1,6 @@
 using Ripstation.ViewModels;
 
-namespace Ripstation.Tests.ViewModels;
+namespace RipstationApp.Tests.ViewModels;
 
 public class GlobalSettingsTests
 {
