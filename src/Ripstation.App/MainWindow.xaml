@@ -54,40 +54,20 @@
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="16" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="disc:" Style="{StaticResource LabelStyle}" />
-                                <TextBox Grid.Column="1" Width="50" TextAlignment="Center"
-                                         Text="{Binding DiskNumber, UpdateSourceTrigger=PropertyChanged}" />
-
-                                <Button Grid.Column="3" Content="Scan"
-                                        Style="{StaticResource AccentButtonStyle}"
+                            <!-- Scan button + inline progress -->
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="⊙  Scan" Style="{StaticResource AccentButtonStyle}"
                                         Command="{Binding ScanCommand}" />
-
-                                <Button Grid.Column="5" Content="Cancel"
-                                        Style="{StaticResource DangerButtonStyle}"
-                                        HorizontalAlignment="Left"
-                                        Command="{Binding CancelCommand}"
-                                        Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}" />
-
-                                <StackPanel Grid.Column="6" Orientation="Horizontal"
+                                <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
                                             Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}">
-                                    <ProgressBar Width="160" Value="{Binding ScanProgress, Mode=OneWay}"
-                                                 Minimum="0" Maximum="100" Margin="0,0,8,0" />
+                                    <ProgressBar Width="180" Value="{Binding ScanProgress, Mode=OneWay}"
+                                                 Minimum="0" Maximum="100" Margin="0,0,8,0" VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding ScanStatus}" FontSize="12"
                                                Foreground="{DynamicResource MutedTextBrush}"
                                                VerticalAlignment="Center" />
                                 </StackPanel>
-                            </Grid>
+                            </StackPanel>
 
                             <!-- Disc name after scan -->
                             <TextBlock Text="{Binding DiscName}"
@@ -133,7 +113,8 @@
                             </DataGrid>
 
                             <TextBlock Text="{Binding SelectedTitleCount, StringFormat='{}{0} title(s) selected'}"
-                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0" />
+                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0"
+                                       Visibility="{Binding HasTitles, Converter={StaticResource BoolToVis}}" />
                         </StackPanel>
                     </Border>
 
@@ -156,7 +137,7 @@
                                     <ColumnDefinition Width="110" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Media Name" Style="{StaticResource LabelStyle}" />
+                                <TextBlock Grid.Column="0" Text="Media Name (optional)" Style="{StaticResource LabelStyle}" />
                                 <TextBox Grid.Column="1" Text="{Binding MediaName, UpdateSourceTrigger=PropertyChanged}"
                                          ToolTip="Leave blank to use the disc/title name" />
                             </Grid>
@@ -173,7 +154,7 @@
                                 <TextBlock Text="Ep End" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
                                 <TextBox Style="{StaticResource IntTextBoxStyle}"
                                          Text="{Binding EpisodeEnd, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Text="{Binding EpisodeCount, StringFormat='({0} episodes)'}"
+                                <TextBlock Text="{Binding EpisodeCount, StringFormat='{}{0} episodes'}"
                                            Style="{StaticResource LabelStyle}" Margin="10,0,0,0" />
                             </StackPanel>
                         </StackPanel>
@@ -184,17 +165,18 @@
                         <StackPanel>
                             <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
 
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                 <Button Content="▶  Rip" Style="{StaticResource AccentButtonStyle}"
                                         Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
                                 <Button Content="⬛  Cancel" Style="{StaticResource DangerButtonStyle}"
                                         Command="{Binding CancelCommand}" Margin="0,0,8,0" />
                                 <Button Content="⏏  Eject" Style="{StaticResource SecondaryButtonStyle}"
                                         Command="{Binding EjectCommand}" />
-                                <CheckBox Content="Eject when done"
-                                          IsChecked="{Binding EjectWhenDone}"
-                                          Margin="16,0,0,0" VerticalAlignment="Center" />
                             </StackPanel>
+
+                            <CheckBox Content="Auto-eject when done"
+                                      IsChecked="{Binding EjectWhenDone}"
+                                      Margin="0,0,0,12" />
 
                             <!-- Per-drive rip progress -->
                             <Grid Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
@@ -208,10 +190,10 @@
                                            FontSize="12" Foreground="{DynamicResource MutedTextBrush}" />
                             </Grid>
 
-                            <!-- Done / cancelled status when idle -->
+                            <!-- Last rip status (only when idle and has a result) -->
                             <TextBlock Text="{Binding RipStatus}"
                                        FontSize="12" Foreground="{DynamicResource MutedTextBrush}"
-                                       Visibility="{Binding IsRipping, Converter={StaticResource InvBoolToVis}}" />
+                                       Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
                         </StackPanel>
                     </Border>
 
@@ -284,15 +266,12 @@
                         </Grid>
 
                         <!-- Preset file -->
-                        <Grid>
+                        <Grid Style="{StaticResource PathRowStyle}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="130" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="8" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="16" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Preset File" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
@@ -300,8 +279,16 @@
                             <Button Grid.Column="3" Content="Browse…"
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowsePreset_Click" />
-                            <TextBlock Grid.Column="5" Text="Preset Name" Style="{StaticResource LabelStyle}" />
-                            <TextBox Grid.Column="6"
+                        </Grid>
+
+                        <!-- Preset name -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="130" />
+                                <ColumnDefinition Width="240" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Preset Name" Style="{StaticResource LabelStyle}" />
+                            <TextBox Grid.Column="1"
                                      Text="{Binding Settings.PresetName, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </StackPanel>

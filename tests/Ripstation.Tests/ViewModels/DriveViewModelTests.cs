@@ -52,31 +52,82 @@ public class DriveViewModelTests
     public void TabHeader_NoDriveLetterNoDiscName_ShowsDiskNumber()
     {
         var vm = BuildDrive(diskNumber: 0);
-        Assert.Equal("Drive — disc:0", vm.TabHeader);
+        Assert.Equal("Drive 0", vm.TabHeader);
     }
 
     [Fact]
-    public void TabHeader_WithDriveLetter_ShowsDriveLetterInParens()
+    public void TabHeader_WithDriveLetter_ShowsDriveLetterOnly()
     {
         var vm = BuildDrive(diskNumber: 1, driveLetter: @"D:\");
-        Assert.Contains("D:", vm.TabHeader);
+        Assert.Equal("D:", vm.TabHeader);
     }
 
     [Fact]
-    public void TabHeader_WithDiscName_ShowsDiscName()
+    public void TabHeader_WithDiscName_ShowsDiscNameWithDriveId()
     {
         var vm = BuildDrive(diskNumber: 0);
         vm.DiscName = "INTERSTELLAR";
-        Assert.Equal("Drive — INTERSTELLAR", vm.TabHeader);
+        Assert.Equal("INTERSTELLAR (Drive 0)", vm.TabHeader);
     }
 
     [Fact]
-    public void TabHeader_DiscNameTakesPrecedenceOverDriveLetter()
+    public void TabHeader_DiscNameAndDriveLetter_ShowsBoth()
     {
         var vm = BuildDrive(diskNumber: 0, driveLetter: @"D:\");
         vm.DiscName = "MY_DISC";
-        Assert.Equal("Drive — MY_DISC", vm.TabHeader);
-        Assert.DoesNotContain("D:", vm.TabHeader);
+        Assert.Equal("MY_DISC (D:)", vm.TabHeader);
+        Assert.Contains("D:", vm.TabHeader);
+    }
+
+    // ── IsRipStatusIdleVisible ────────────────────────────────────────────────
+
+    [Fact]
+    public void IsRipStatusIdleVisible_DefaultState_False()
+    {
+        var vm = BuildDrive();
+        Assert.False(vm.IsRipStatusIdleVisible);
+    }
+
+    [Fact]
+    public void IsRipStatusIdleVisible_StatusSetWhenIdle_True()
+    {
+        var vm = BuildDrive();
+        vm.RipStatus = "Done!";
+        Assert.True(vm.IsRipStatusIdleVisible);
+    }
+
+    [Fact]
+    public void IsRipStatusIdleVisible_EmptyStatus_False()
+    {
+        var vm = BuildDrive();
+        vm.RipStatus = "";
+        Assert.False(vm.IsRipStatusIdleVisible);
+    }
+
+    // ── HasTitles ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void HasTitles_Default_False()
+    {
+        var vm = BuildDrive();
+        Assert.False(vm.HasTitles);
+    }
+
+    [Fact]
+    public void HasTitles_AfterAddingTitle_True()
+    {
+        var vm = BuildDrive();
+        vm.Titles.Add(MakeTitle());
+        Assert.True(vm.HasTitles);
+    }
+
+    [Fact]
+    public void HasTitles_AfterClearingTitles_False()
+    {
+        var vm = BuildDrive();
+        vm.Titles.Add(MakeTitle());
+        vm.Titles.Clear();
+        Assert.False(vm.HasTitles);
     }
 
     // ── EpisodeCount ──────────────────────────────────────────────────────────

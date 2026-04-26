@@ -97,14 +97,20 @@ public partial class DriveViewModel : ObservableObject
     [NotifyCanExecuteChangedFor(nameof(ScanCommand))]
     [NotifyCanExecuteChangedFor(nameof(RipStandaloneCommand))]
     [NotifyCanExecuteChangedFor(nameof(CancelCommand))]
+    [NotifyPropertyChangedFor(nameof(IsRipStatusIdleVisible))]
     private bool _isRipping;
 
     [ObservableProperty] private int _ripProgress;
     [ObservableProperty] private string _ripStatus = string.Empty;
 
+    public bool IsRipStatusIdleVisible => !IsRipping && !string.IsNullOrEmpty(RipStatus);
+    partial void OnRipStatusChanged(string value) => OnPropertyChanged(nameof(IsRipStatusIdleVisible));
+
     // ── Titles ─────────────────────────────────────────────────────────────────
 
     public ObservableCollection<TitleViewModel> Titles { get; } = [];
+
+    public bool HasTitles => Titles.Count > 0;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RipStandaloneCommand))]
@@ -120,12 +126,12 @@ public partial class DriveViewModel : ObservableObject
         get
         {
             var driveId = string.IsNullOrEmpty(DriveLetter)
-                ? $"disc:{DiskNumber}"
-                : $"disc:{DiskNumber} ({DriveLetter.TrimEnd('\\', '/')})";
+                ? $"Drive {DiskNumber}"
+                : DriveLetter.TrimEnd('\\', '/');
 
             return string.IsNullOrEmpty(DiscName)
-                ? $"Drive — {driveId}"
-                : $"Drive — {DiscName}";
+                ? driveId
+                : $"{DiscName} ({driveId})";
         }
     }
 
@@ -154,6 +160,8 @@ public partial class DriveViewModel : ObservableObject
         _driveService = driveService;
         _sharedLog = sharedLog;
         _fs = fileSystem ?? new FileSystem();
+
+        Titles.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasTitles));
 
         // Refresh CanExecute when global settings change (e.g. user changes HandBrake path)
         _settings.PropertyChanged += (_, _) =>
