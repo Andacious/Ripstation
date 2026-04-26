@@ -225,7 +225,9 @@
         </Border>
 
         <!-- ═══ MAIN CONTENT ═════════════════════════════════════════════════ -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,16,20,4">
+        <ScrollViewer Grid.Row="1" x:Name="MainScrollViewer"
+                      VerticalScrollBarVisibility="Auto" Padding="20,16,20,4"
+                      PreviewMouseWheel="MainScrollViewer_PreviewMouseWheel">
             <StackPanel>
 
                 <!-- ── GLOBAL: Tool Paths ─────────────────────────────────── -->
