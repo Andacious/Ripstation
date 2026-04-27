@@ -26,6 +26,9 @@ public partial class MainViewModel : ObservableObject
 
     public ObservableCollection<DriveViewModel> Drives { get; } = [];
 
+    public string StatusText =>
+        $"{Drives.Count} drive(s)  ·  {Settings.OutputPath}";
+
     // ── Rip All state ─────────────────────────────────────────────────────────
 
     [ObservableProperty]
@@ -55,7 +58,10 @@ public partial class MainViewModel : ObservableObject
         _handBrake = handBrake;
         _naming = naming;
         _driveService = driveService;
-        _dispatcher = dispatcher ?? new WpfDispatcher(System.Windows.Threading.Dispatcher.CurrentDispatcher);
+        _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+
+        Drives.CollectionChanged += (_, _) => OnPropertyChanged(nameof(StatusText));
+        Settings.PropertyChanged += (_, _) => OnPropertyChanged(nameof(StatusText));
 
         // Populate drives from attached optical drives; fall back to two defaults
         var detected = _driveService.GetOpticalDrives();

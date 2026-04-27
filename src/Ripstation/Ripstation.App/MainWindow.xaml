@@ -1,310 +1,311 @@
-<Window x:Class="Ripstation.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:Ripstation.ViewModels"
-        Title="Ripstation"
-        Width="1100" Height="860"
-        MinWidth="820" MinHeight="620"
-        WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource AppBackgroundBrush}"
-        Loaded="OnLoaded">
+<Window
+    x:Class="Ripstation.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Ripstation.ViewModels">
 
-    <Window.Resources>
-        <Style x:Key="PathRowStyle" TargetType="Grid">
-            <Setter Property="Margin" Value="0,0,0,10" />
-        </Style>
-
-        <!-- Close button for tab header -->
-        <Style x:Key="TabCloseButtonStyle" TargetType="Button">
-            <Setter Property="Width" Value="16" />
-            <Setter Property="Height" Value="16" />
-            <Setter Property="Margin" Value="6,0,0,0" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="10" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Foreground" Value="{DynamicResource TabCloseForegroundBrush}" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="3"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource TabCloseHoverBgBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- DataTemplate for DriveViewModel tabs -->
-        <DataTemplate x:Key="DriveTabContentTemplate" DataType="{x:Type vm:DriveViewModel}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,4,4,4">
-                <StackPanel>
-
-                    <!-- ── Scan ─────────────────────────────────────────── -->
-                    <Border Style="{StaticResource CardStyle}">
-                        <StackPanel>
-                            <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
-
-                            <!-- Scan button + inline progress -->
-                            <StackPanel Orientation="Horizontal">
-                                <Button Content="⊙  Scan" Style="{StaticResource AccentButtonStyle}"
-                                        Command="{Binding ScanCommand}" />
-                                <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
-                                            Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}">
-                                    <ProgressBar Width="180" Value="{Binding ScanProgress, Mode=OneWay}"
-                                                 Minimum="0" Maximum="100" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding ScanStatus}" FontSize="12"
-                                               Foreground="{DynamicResource MutedTextBrush}"
-                                               VerticalAlignment="Center" />
-                                </StackPanel>
-                            </StackPanel>
-
-                            <!-- Disc name after scan -->
-                            <TextBlock Text="{Binding DiscName}"
-                                       FontSize="13" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource AccentBrush}"
-                                       Margin="0,10,0,0"
-                                       Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
-
-                            <!-- Scan complete status -->
-                            <TextBlock Text="{Binding ScanStatus}"
-                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}"
-                                       Margin="0,6,0,0"
-                                       Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
-                        </StackPanel>
-                    </Border>
-
-                    <!-- ── Titles ───────────────────────────────────────── -->
-                    <Border Style="{StaticResource CardStyle}">
-                        <StackPanel>
-                            <DockPanel Margin="0,0,0,10">
-                                <TextBlock Text="Titles" Style="{StaticResource SectionHeaderStyle}"
-                                           Margin="0" VerticalAlignment="Center" DockPanel.Dock="Left" />
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="Select All" Style="{StaticResource BrowseButtonStyle}"
-                                            Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
-                                    <Button Content="Deselect All" Style="{StaticResource BrowseButtonStyle}"
-                                            Command="{Binding DeselectAllCommand}" />
-                                </StackPanel>
-                            </DockPanel>
-
-                            <DataGrid ItemsSource="{Binding Titles}" MaxHeight="240"
-                                      IsReadOnly="False">
-                                <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header="✓" Binding="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"
-                                                            Width="36" />
-                                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="44" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Chapters" Binding="{Binding Chapters}" Width="72" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Duration" Binding="{Binding DurationDisplay}" Width="80" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="Size" Binding="{Binding SizeDisplay}" Width="80" IsReadOnly="True" />
-                                    <DataGridTextColumn Header="File" Binding="{Binding FileName}" Width="160" IsReadOnly="True" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-
-                            <TextBlock Text="{Binding SelectedTitleCount, StringFormat='{}{0} title(s) selected'}"
-                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}" Margin="0,8,0,0"
-                                       Visibility="{Binding HasTitles, Converter={StaticResource BoolToVis}}" />
-                        </StackPanel>
-                    </Border>
-
-                    <!-- ── Media Settings ───────────────────────────────── -->
-                    <Border Style="{StaticResource CardStyle}">
-                        <StackPanel>
-                            <TextBlock Text="Media Settings" Style="{StaticResource SectionHeaderStyle}" />
-
-                            <!-- Movie / TV -->
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                <RadioButton Content="Movie" GroupName="{Binding DiskNumber}"
-                                             IsChecked="{Binding IsTvMode, Converter={StaticResource InvBool}}" />
-                                <RadioButton Content="TV Show" GroupName="{Binding DiskNumber}"
-                                             IsChecked="{Binding IsTvMode}" />
-                            </StackPanel>
-
-                            <!-- Name -->
-                            <Grid Style="{StaticResource PathRowStyle}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="110" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Media Name (optional)" Style="{StaticResource LabelStyle}" />
-                                <TextBox Grid.Column="1" Text="{Binding MediaName, UpdateSourceTrigger=PropertyChanged}"
-                                         ToolTip="Leave blank to use the disc/title name" />
-                            </Grid>
-
-                            <!-- TV: Season / Episodes -->
-                            <StackPanel Orientation="Horizontal"
-                                        Visibility="{Binding IsTvShow, Converter={StaticResource BoolToVis}}">
-                                <TextBlock Text="Season" Style="{StaticResource LabelStyle}" />
-                                <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                         Text="{Binding Season, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Text="Ep Start" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
-                                <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                         Text="{Binding EpisodeStart, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Text="Ep End" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
-                                <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                         Text="{Binding EpisodeEnd, UpdateSourceTrigger=PropertyChanged}" />
-                                <TextBlock Text="{Binding EpisodeCount, StringFormat='{}{0} episodes'}"
-                                           Style="{StaticResource LabelStyle}" Margin="10,0,0,0" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- ── Per-Drive Actions ─────────────────────────────── -->
-                    <Border Style="{StaticResource CardStyle}">
-                        <StackPanel>
-                            <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
-
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                <Button Content="▶  Rip" Style="{StaticResource AccentButtonStyle}"
-                                        Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
-                                <Button Content="⬛  Cancel" Style="{StaticResource DangerButtonStyle}"
-                                        Command="{Binding CancelCommand}" Margin="0,0,8,0" />
-                                <Button Content="⏏  Eject" Style="{StaticResource SecondaryButtonStyle}"
-                                        Command="{Binding EjectCommand}" />
-                            </StackPanel>
-
-                            <CheckBox Content="Auto-eject when done"
-                                      IsChecked="{Binding EjectWhenDone}"
-                                      Margin="0,0,0,12" />
-
-                            <!-- Per-drive rip progress -->
-                            <Grid Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <ProgressBar Grid.Row="0" Value="{Binding RipProgress, Mode=OneWay}"
-                                             Minimum="0" Maximum="100" Margin="0,0,0,4" />
-                                <TextBlock Grid.Row="1" Text="{Binding RipStatus}"
-                                           FontSize="12" Foreground="{DynamicResource MutedTextBrush}" />
-                            </Grid>
-
-                            <!-- Last rip status (only when idle and has a result) -->
-                            <TextBlock Text="{Binding RipStatus}"
-                                       FontSize="12" Foreground="{DynamicResource MutedTextBrush}"
-                                       Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
-                        </StackPanel>
-                    </Border>
-
-                </StackPanel>
-            </ScrollViewer>
-        </DataTemplate>
-
-    </Window.Resources>
-
-    <Grid>
+    <Grid x:Name="RootGrid" Background="{ThemeResource AppBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="52" />   <!-- Header bar -->
-            <RowDefinition Height="*" />    <!-- Scrollable content -->
-            <RowDefinition Height="Auto" /> <!-- Status bar -->
+            <RowDefinition Height="52" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <!-- ═══ HEADER BAR ══════════════════════════════════════════════════ -->
-        <Border Grid.Row="0" Background="{DynamicResource AccentBrush}">
-            <DockPanel Margin="20,0">
-                <Button Content="⚙  Settings" DockPanel.Dock="Right"
+        <Border Grid.Row="0" Background="{ThemeResource AccentBrush}">
+            <Grid Margin="20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Ripstation"
+                               FontSize="20" FontWeight="Bold" Foreground="White" />
+                    <TextBlock Text="Disc ripper · MakeMKV + HandBrake"
+                               FontSize="12" Foreground="#CCE4FF"
+                               VerticalAlignment="Center" Margin="14,0,0,0" />
+                </StackPanel>
+                <Button Grid.Column="2"
+                        Content="⚙  Settings"
                         Click="OpenSettings_Click"
                         VerticalAlignment="Center"
-                        Padding="12,6" Margin="0,0,0,0"
-                        Background="Transparent" BorderThickness="1"
-                        BorderBrush="#CCE4FF" Foreground="White"
-                        Cursor="Hand" FontSize="12">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="BorderBrush" Value="#CCE4FF" />
-                            <Setter Property="BorderThickness" Value="1" />
-                            <Setter Property="Foreground" Value="White" />
-                            <Setter Property="Cursor" Value="Hand" />
-                            <Setter Property="FontSize" Value="12" />
-                            <Setter Property="Padding" Value="12,6" />
-                            <Setter Property="VerticalAlignment" Value="Center" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="4"
-                                                Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#33FFFFFF" />
-                                            </Trigger>
-                                            <Trigger Property="IsPressed" Value="True">
-                                                <Setter Property="Background" Value="#55FFFFFF" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <TextBlock Text="Ripstation"
-                           FontSize="20" FontWeight="Bold"
-                           Foreground="White"
-                           VerticalAlignment="Center" />
-                <TextBlock Text="Disc ripper · MakeMKV + HandBrake"
-                           FontSize="12" Foreground="#CCE4FF"
-                           VerticalAlignment="Center"
-                           Margin="14,0,0,0" />
-            </DockPanel>
+                        Style="{StaticResource HeaderButtonStyle}" />
+            </Grid>
         </Border>
 
         <!-- ═══ MAIN CONTENT ═════════════════════════════════════════════════ -->
-        <ScrollViewer Grid.Row="1" x:Name="MainScrollViewer"
-                      VerticalScrollBarVisibility="Auto" Padding="20,16,20,4"
-                      PreviewMouseWheel="MainScrollViewer_PreviewMouseWheel">
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="20,16,20,4">
             <StackPanel>
 
-                <!-- ── DRIVES (TabControl) ───────────────────────────────── -->
+                <!-- ── DRIVES ────────────────────────────────────────────── -->
                 <Border Style="{StaticResource CardStyle}" Padding="0">
                     <StackPanel>
-                        <!-- Tab bar header row -->
-                        <DockPanel Margin="16,12,16,0">
-                            <TextBlock Text="Drives" Style="{StaticResource SectionHeaderStyle}"
-                                       Margin="0" VerticalAlignment="Center" DockPanel.Dock="Left" />
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <!-- Section header row -->
+                        <Grid Margin="16,12,16,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Drives"
+                                       Style="{StaticResource SectionHeaderStyle}"
+                                       Margin="0" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="2" Orientation="Horizontal">
                                 <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}"
                                         Command="{Binding DetectDrivesCommand}" Margin="0,0,6,0" />
                                 <Button Content="+ Add Drive" Style="{StaticResource BrowseButtonStyle}"
                                         Command="{Binding AddDriveCommand}" />
                             </StackPanel>
-                        </DockPanel>
+                        </Grid>
 
-                        <TabControl ItemsSource="{Binding Drives}"
-                                    ContentTemplate="{StaticResource DriveTabContentTemplate}"
-                                    SelectedIndex="0"
-                                    Margin="8,8,8,8"
-                                    MinHeight="520">
-                            <TabControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:DriveViewModel}">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding TabHeader}"
-                                                   VerticalAlignment="Center" FontSize="12" />
-                                        <Button Content="×"
-                                                Style="{StaticResource TabCloseButtonStyle}"
-                                                Command="{Binding DataContext.RemoveDriveCommand,
-                                                    RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                                CommandParameter="{Binding}" />
-                                    </StackPanel>
+                        <TabView x:Name="DrivesTabView"
+                                 TabItemsSource="{Binding Drives}"
+                                 TabCloseRequested="OnTabCloseRequested"
+                                 IsAddTabButtonVisible="False"
+                                 Margin="8,0,8,8"
+                                 MinHeight="520">
+                            <TabView.TabItemTemplate>
+                                <DataTemplate>
+                                    <TabViewItem Header="{Binding TabHeader}" IsClosable="True">
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,4,4,4">
+                                            <StackPanel>
+
+                                                <!-- ── Scan ───────────────────────────────────── -->
+                                                <Border Style="{StaticResource CardStyle}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Button Content="⊙  Scan" Style="{StaticResource AccentButtonStyle}"
+                                                                    Command="{Binding ScanCommand}" />
+                                                            <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
+                                                                        Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}">
+                                                                <ProgressBar Width="180" Value="{Binding ScanProgress, Mode=OneWay}"
+                                                                             Minimum="0" Maximum="100" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                                                <TextBlock Text="{Binding ScanStatus}" FontSize="12"
+                                                                           Foreground="{ThemeResource MutedTextBrush}"
+                                                                           VerticalAlignment="Center" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding DiscName}"
+                                                                   FontSize="13" FontWeight="SemiBold"
+                                                                   Foreground="{ThemeResource AccentBrush}"
+                                                                   Margin="0,10,0,0"
+                                                                   Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
+                                                        <TextBlock Text="{Binding ScanStatus}"
+                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                                   Margin="0,6,0,0"
+                                                                   Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- ── Titles ─────────────────────────────────── -->
+                                                <Border Style="{StaticResource CardStyle}">
+                                                    <StackPanel>
+                                                        <Grid Margin="0,0,0,10">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="Titles"
+                                                                       Style="{StaticResource SectionHeaderStyle}"
+                                                                       Margin="0" VerticalAlignment="Center" />
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                                <Button Content="Select All" Style="{StaticResource BrowseButtonStyle}"
+                                                                        Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
+                                                                <Button Content="Deselect All" Style="{StaticResource BrowseButtonStyle}"
+                                                                        Command="{Binding DeselectAllCommand}" />
+                                                            </StackPanel>
+                                                        </Grid>
+
+                                                        <!-- Titles list with header + rows -->
+                                                        <Border Background="{ThemeResource SurfaceBrush}"
+                                                                BorderBrush="{ThemeResource CardBorderBrush}"
+                                                                BorderThickness="1"
+                                                                MaxHeight="240">
+                                                            <Grid>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="*"/>
+                                                                </Grid.RowDefinitions>
+                                                                <!-- Column headers -->
+                                                                <Border Grid.Row="0"
+                                                                        Background="{ThemeResource ColumnHeaderBrush}"
+                                                                        BorderBrush="{ThemeResource GridLineBrush}"
+                                                                        BorderThickness="0,0,0,1">
+                                                                    <Grid Padding="4,5">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="36"/>
+                                                                            <ColumnDefinition Width="44"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="72"/>
+                                                                            <ColumnDefinition Width="80"/>
+                                                                            <ColumnDefinition Width="80"/>
+                                                                            <ColumnDefinition Width="160"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBlock Grid.Column="0" Text="✓" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"
+                                                                                   HorizontalAlignment="Center"/>
+                                                                        <TextBlock Grid.Column="1" Text="ID" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                        <TextBlock Grid.Column="2" Text="Name" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                        <TextBlock Grid.Column="3" Text="Ch" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                        <TextBlock Grid.Column="4" Text="Duration" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                        <TextBlock Grid.Column="5" Text="Size" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                        <TextBlock Grid.Column="6" Text="File" FontSize="11"
+                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    </Grid>
+                                                                </Border>
+                                                                <!-- Data rows -->
+                                                                <ListView Grid.Row="1"
+                                                                          ItemsSource="{Binding Titles}"
+                                                                          SelectionMode="None">
+                                                                    <ListView.ItemContainerStyle>
+                                                                        <Style TargetType="ListViewItem">
+                                                                            <Setter Property="Padding" Value="0"/>
+                                                                            <Setter Property="MinHeight" Value="0"/>
+                                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                                        </Style>
+                                                                    </ListView.ItemContainerStyle>
+                                                                    <ListView.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <Border BorderBrush="{ThemeResource GridLineBrush}"
+                                                                                    BorderThickness="0,0,0,1">
+                                                                                <Grid Padding="4,3">
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="36"/>
+                                                                                        <ColumnDefinition Width="44"/>
+                                                                                        <ColumnDefinition Width="*"/>
+                                                                                        <ColumnDefinition Width="72"/>
+                                                                                        <ColumnDefinition Width="80"/>
+                                                                                        <ColumnDefinition Width="80"/>
+                                                                                        <ColumnDefinition Width="160"/>
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <CheckBox Grid.Column="0"
+                                                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                                                              Padding="0" MinWidth="0"
+                                                                                              HorizontalAlignment="Center"
+                                                                                              VerticalAlignment="Center"/>
+                                                                                    <TextBlock Grid.Column="1" Text="{Binding Id}"
+                                                                                               FontSize="13" VerticalAlignment="Center"/>
+                                                                                    <TextBlock Grid.Column="2" Text="{Binding Name}"
+                                                                                               FontSize="13" VerticalAlignment="Center"
+                                                                                               TextTrimming="CharacterEllipsis"/>
+                                                                                    <TextBlock Grid.Column="3" Text="{Binding Chapters}"
+                                                                                               FontSize="13" VerticalAlignment="Center"/>
+                                                                                    <TextBlock Grid.Column="4" Text="{Binding DurationDisplay}"
+                                                                                               FontSize="13" VerticalAlignment="Center"/>
+                                                                                    <TextBlock Grid.Column="5" Text="{Binding SizeDisplay}"
+                                                                                               FontSize="13" VerticalAlignment="Center"/>
+                                                                                    <TextBlock Grid.Column="6" Text="{Binding FileName}"
+                                                                                               FontSize="13" VerticalAlignment="Center"
+                                                                                               TextTrimming="CharacterEllipsis"/>
+                                                                                </Grid>
+                                                                            </Border>
+                                                                        </DataTemplate>
+                                                                    </ListView.ItemTemplate>
+                                                                </ListView>
+                                                            </Grid>
+                                                        </Border>
+
+                                                        <TextBlock Text="{Binding SelectedTitleCountText}"
+                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                                   Margin="0,8,0,0"
+                                                                   Visibility="{Binding HasTitles, Converter={StaticResource BoolToVis}}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- ── Media Settings ─────────────────────────── -->
+                                                <Border Style="{StaticResource CardStyle}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="Media Settings" Style="{StaticResource SectionHeaderStyle}" />
+
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                                            <RadioButton Content="Movie"
+                                                                         GroupName="{Binding RadioGroupName}"
+                                                                         IsChecked="{Binding IsTvMode, Converter={StaticResource InvBool}}" />
+                                                            <RadioButton Content="TV Show"
+                                                                         GroupName="{Binding RadioGroupName}"
+                                                                         IsChecked="{Binding IsTvMode}" />
+                                                        </StackPanel>
+
+                                                        <Grid Margin="0,0,0,10">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="110" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="Media Name (optional)"
+                                                                       Style="{StaticResource LabelStyle}" />
+                                                            <TextBox Grid.Column="1"
+                                                                     Text="{Binding MediaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                     PlaceholderText="Leave blank to use disc/title name" />
+                                                        </Grid>
+
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Visibility="{Binding IsTvShow, Converter={StaticResource BoolToVis}}">
+                                                            <TextBlock Text="Season" Style="{StaticResource LabelStyle}" />
+                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
+                                                                     Text="{Binding Season, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBlock Text="Ep Start" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
+                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
+                                                                     Text="{Binding EpisodeStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBlock Text="Ep End" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
+                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
+                                                                     Text="{Binding EpisodeEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBlock Text="{Binding EpisodeCountText}"
+                                                                       Style="{StaticResource LabelStyle}" Margin="10,0,0,0" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Border>
+
+                                                <!-- ── Per-Drive Actions ──────────────────────── -->
+                                                <Border Style="{StaticResource CardStyle}">
+                                                    <StackPanel>
+                                                        <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
+
+                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                            <Button Content="▶  Rip" Style="{StaticResource AccentButtonStyle}"
+                                                                    Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
+                                                            <Button Content="⬛  Cancel" Style="{StaticResource DangerButtonStyle}"
+                                                                    Command="{Binding CancelCommand}" Margin="0,0,8,0" />
+                                                            <Button Content="⏏  Eject" Style="{StaticResource SecondaryButtonStyle}"
+                                                                    Command="{Binding EjectCommand}" />
+                                                        </StackPanel>
+
+                                                        <CheckBox Content="Auto-eject when done"
+                                                                  IsChecked="{Binding EjectWhenDone, Mode=TwoWay}"
+                                                                  Margin="0,0,0,12" />
+
+                                                        <Grid Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto" />
+                                                                <RowDefinition Height="Auto" />
+                                                            </Grid.RowDefinitions>
+                                                            <ProgressBar Grid.Row="0" Value="{Binding RipProgress, Mode=OneWay}"
+                                                                         Minimum="0" Maximum="100" Margin="0,0,0,4" />
+                                                            <TextBlock Grid.Row="1" Text="{Binding RipStatus}"
+                                                                       FontSize="12" Foreground="{ThemeResource MutedTextBrush}" />
+                                                        </Grid>
+
+                                                        <TextBlock Text="{Binding RipStatus}"
+                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                                   Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
+                                                    </StackPanel>
+                                                </Border>
+
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </TabViewItem>
                                 </DataTemplate>
-                            </TabControl.ItemTemplate>
-                        </TabControl>
+                            </TabView.TabItemTemplate>
+                        </TabView>
                     </StackPanel>
                 </Border>
 
@@ -323,27 +324,34 @@
                     </StackPanel>
                 </Border>
 
-                <!-- ── LOG ─────────────────────────────────────────────── -->
+                <!-- ── LOG ───────────────────────────────────────────────── -->
                 <Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                     <StackPanel>
-                        <DockPanel Margin="0,0,0,10">
-                            <TextBlock Text="Log" Style="{StaticResource SectionHeaderStyle}"
-                                       Margin="0" VerticalAlignment="Center" DockPanel.Dock="Left" />
-                            <Button Content="Clear" HorizontalAlignment="Right"
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Log"
+                                       Style="{StaticResource SectionHeaderStyle}"
+                                       Margin="0" VerticalAlignment="Center" />
+                            <Button Grid.Column="2" Content="Clear"
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Command="{Binding ClearLogCommand}" />
-                        </DockPanel>
+                        </Grid>
                         <TextBox x:Name="LogTextBox"
                                  Text="{Binding LogText, Mode=OneWay}"
                                  IsReadOnly="True"
-                                 AllowDrop="False"
                                  Height="180"
-                                 FontFamily="Consolas" FontSize="11"
-                                 Background="#1E1E1E" Foreground="#DCDCDC"
+                                 FontFamily="Consolas"
+                                 FontSize="11"
+                                 Background="#1E1E1E"
+                                 Foreground="#DCDCDC"
                                  BorderThickness="0"
                                  TextWrapping="NoWrap"
-                                 VerticalScrollBarVisibility="Auto"
-                                 HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                  Padding="4" />
                     </StackPanel>
                 </Border>
@@ -352,13 +360,13 @@
         </ScrollViewer>
 
         <!-- ═══ STATUS BAR ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="2" Background="{DynamicResource StatusBarBrush}" BorderBrush="{DynamicResource StatusBarBorderBrush}"
-                BorderThickness="0,1,0,0" Padding="16,4">
-            <TextBlock FontSize="11" Foreground="{DynamicResource MutedTextBrush}">
-                <Run Text="{Binding Drives.Count, StringFormat='{}{0} drive(s)', Mode=OneWay}" />
-                <Run Text=" · " />
-                <Run Text="{Binding Settings.OutputPath, Mode=OneWay}" />
-            </TextBlock>
+        <Border Grid.Row="2"
+                Background="{ThemeResource StatusBarBrush}"
+                BorderBrush="{ThemeResource StatusBarBorderBrush}"
+                BorderThickness="0,1,0,0"
+                Padding="16,4">
+            <TextBlock Text="{Binding StatusText}"
+                       FontSize="11" Foreground="{ThemeResource MutedTextBrush}" />
         </Border>
 
     </Grid>

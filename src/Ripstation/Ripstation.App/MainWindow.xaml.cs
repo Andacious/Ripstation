@@ -1,82 +1,58 @@
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Ripstation.Services;
 using Ripstation.ViewModels;
+using Windows.Graphics;
 
 namespace Ripstation;
 
-public partial class MainWindow : Window
+public sealed partial class MainWindow : Window
 {
-    public MainWindow()
+    private MainViewModel? _vm;
+
+    public MainWindow(
+        IMakeMkvService makeMkv,
+        IHandBrakeService handBrake,
+        IMediaNamingService naming,
+        IDriveService drive)
     {
         InitializeComponent();
+        Title = "Ripstation";
+
+        var dispatcher = new WinUIDispatcher(DispatcherQueue.GetForCurrentThread());
+        _vm = new MainViewModel(makeMkv, handBrake, naming, drive, dispatcher);
+        RootGrid.DataContext = _vm;
+
+        AppWindow.Resize(new SizeInt32(1100, 860));
+        RootGrid.Loaded += OnLoaded;
     }
-
-    private MainViewModel Vm => (MainViewModel)DataContext;
-
-    // ── Mouse wheel forwarding (prevent inner ScrollViewer from swallowing events) ─
-
-    private void MainScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-        var outerSv = (ScrollViewer)sender;
-        var source = e.OriginalSource as DependencyObject;
-
-        // Find the closest ScrollViewer ancestor of the event source that is NOT the outer one
-        var innerSv = FindAncestorScrollViewer(source, outerSv);
-        if (innerSv == null) return; // Mouse is over outer content — let outer SV handle normally
-
-        // WPF ScrollViewer always marks MouseWheel as Handled even when it can't scroll,
-        // so intercept here in the tunnel phase and route manually.
-        e.Handled = true;
-
-        double linePixels = SystemParameters.WheelScrollLines * 16.0;
-        double amount = -e.Delta / 120.0 * linePixels;
-
-        // Prefer inner SV if it actually has scrollable content; fall back to outer SV
-        var target = innerSv.ScrollableHeight > 0 ? innerSv : outerSv;
-        target.ScrollToVerticalOffset(
-            Math.Clamp(target.VerticalOffset + amount, 0, target.ScrollableHeight));
-    }
-
-    private static ScrollViewer? FindAncestorScrollViewer(DependencyObject? obj, ScrollViewer exclude)
-    {
-        var current = obj;
-        while (current != null && current != exclude)
-        {
-            if (current is ScrollViewer sv)
-                return sv;
-            current = VisualTreeHelper.GetParent(current);
-        }
-        return null;
-    }
-
-    // ── Log auto-scroll ───────────────────────────────────────────────────────
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-        Vm.PropertyChanged += Vm_PropertyChanged;
+        if (_vm != null)
+            _vm.PropertyChanged += Vm_PropertyChanged;
     }
 
     private void Vm_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MainViewModel.LogText))
-            LogTextBox.ScrollToEnd();
+        {
+            LogTextBox.SelectionStart = LogTextBox.Text.Length;
+        }
     }
-
-    protected override void OnClosed(EventArgs e)
-    {
-        Vm.PropertyChanged -= Vm_PropertyChanged;
-        base.OnClosed(e);
-    }
-
-    // ── Settings dialog ───────────────────────────────────────────────────────
 
     private void OpenSettings_Click(object sender, RoutedEventArgs e)
     {
-        new SettingsWindow(Vm.Settings) { Owner = this }.ShowDialog();
+        if (_vm == null) return;
+        var win = new SettingsWindow(_vm.Settings);
+        win.Activate();
     }
 
-    // ── Clear log ─────────────────────────────────────────────────────────────
-
+    private void OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    {
+        if (args.Item is DriveViewModel drive)
+            _vm?.RemoveDriveCommand.Execute(drive);
+    }
 }

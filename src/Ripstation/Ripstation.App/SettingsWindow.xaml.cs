@@ -1,67 +1,73 @@
-using System.Windows;
-using Microsoft.Win32;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Ripstation.ViewModels;
+using Windows.Graphics;
 
 namespace Ripstation;
 
-public partial class SettingsWindow : Window
+public sealed partial class SettingsWindow : Window
 {
     public SettingsWindow(GlobalSettings settings)
     {
         InitializeComponent();
-        DataContext = settings;
+        Title = "Settings";
+        AppWindow.Resize(new SizeInt32(660, 600));
+        ContentGrid.DataContext = settings;
     }
 
-    private GlobalSettings Settings => (GlobalSettings)DataContext;
+    private GlobalSettings Settings => (GlobalSettings)ContentGrid.DataContext;
 
-    private void BrowseMakeMkv_Click(object sender, RoutedEventArgs e)
+    private async void BrowseMakeMkv_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog
-        {
-            Title = "Select MakeMKV CLI",
-            Filter = "MakeMKV CLI|makemkvcon64.exe|Executable|*.exe",
-            CheckFileExists = true,
-        };
-        if (dlg.ShowDialog(this) == true)
-            Settings.MakeMkvExePath = dlg.FileName;
+        var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        picker.FileTypeFilter.Add(".exe");
+        picker.FileTypeFilter.Add("*");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        var file = await picker.PickSingleFileAsync();
+        if (file != null) Settings.MakeMkvExePath = file.Path;
     }
 
-    private void BrowseHandBrake_Click(object sender, RoutedEventArgs e)
+    private async void BrowseHandBrake_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog
-        {
-            Title = "Select HandBrakeCLI",
-            Filter = "HandBrakeCLI|HandBrakeCLI.exe|Executable|*.exe",
-            CheckFileExists = true,
-        };
-        if (dlg.ShowDialog(this) == true)
-            Settings.HandBrakeExePath = dlg.FileName;
+        var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        picker.FileTypeFilter.Add(".exe");
+        picker.FileTypeFilter.Add("*");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        var file = await picker.PickSingleFileAsync();
+        if (file != null) Settings.HandBrakeExePath = file.Path;
     }
 
-    private void BrowsePreset_Click(object sender, RoutedEventArgs e)
+    private async void BrowsePreset_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog
-        {
-            Title = "Select HandBrake Preset File",
-            Filter = "JSON Preset|*.json|All files|*.*",
-            CheckFileExists = true,
-        };
-        if (dlg.ShowDialog(this) == true)
-            Settings.PresetFilePath = dlg.FileName;
+        var picker = new Windows.Storage.Pickers.FileOpenPicker();
+        picker.FileTypeFilter.Add(".json");
+        picker.FileTypeFilter.Add("*");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        var file = await picker.PickSingleFileAsync();
+        if (file != null) Settings.PresetFilePath = file.Path;
     }
 
-    private void BrowseIntermediate_Click(object sender, RoutedEventArgs e)
+    private async void BrowseIntermediate_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFolderDialog { Title = "Select Intermediate (MKV) Folder" };
-        if (dlg.ShowDialog(this) == true)
-            Settings.IntermediatePath = dlg.FolderName;
+        var picker = new Windows.Storage.Pickers.FolderPicker();
+        picker.FileTypeFilter.Add("*");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        var folder = await picker.PickSingleFolderAsync();
+        if (folder != null) Settings.IntermediatePath = folder.Path;
     }
 
-    private void BrowseOutput_Click(object sender, RoutedEventArgs e)
+    private async void BrowseOutput_Click(object sender, RoutedEventArgs e)
     {
-        var dlg = new OpenFolderDialog { Title = "Select Output (Plex) Folder" };
-        if (dlg.ShowDialog(this) == true)
-            Settings.OutputPath = dlg.FolderName;
+        var picker = new Windows.Storage.Pickers.FolderPicker();
+        picker.FileTypeFilter.Add("*");
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+        var folder = await picker.PickSingleFolderAsync();
+        if (folder != null) Settings.OutputPath = folder.Path;
     }
 
     private void Close_Click(object sender, RoutedEventArgs e) => Close();

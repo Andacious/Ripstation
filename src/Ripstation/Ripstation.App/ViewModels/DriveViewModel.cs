@@ -25,8 +25,11 @@ public partial class DriveViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TabHeader))]
+    [NotifyPropertyChangedFor(nameof(RadioGroupName))]
     [NotifyCanExecuteChangedFor(nameof(ScanCommand))]
     private int _diskNumber;
+
+    public string RadioGroupName => $"MediaType_{DiskNumber}";
 
     /// <summary>
     /// WMP CD-ROM index used for ejection (usually same as DiskNumber but
@@ -58,14 +61,17 @@ public partial class DriveViewModel : ObservableObject
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RipStandaloneCommand))]
     [NotifyPropertyChangedFor(nameof(EpisodeCount))]
+    [NotifyPropertyChangedFor(nameof(EpisodeCountText))]
     private int _episodeStart = 1;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RipStandaloneCommand))]
     [NotifyPropertyChangedFor(nameof(EpisodeCount))]
+    [NotifyPropertyChangedFor(nameof(EpisodeCountText))]
     private int _episodeEnd = 1;
 
     public int EpisodeCount => Math.Max(0, EpisodeEnd - EpisodeStart + 1);
+    public string EpisodeCountText => $"{EpisodeCount} episodes";
 
     [ObservableProperty] private bool _ejectWhenDone;
 
@@ -114,9 +120,12 @@ public partial class DriveViewModel : ObservableObject
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(RipStandaloneCommand))]
+    [NotifyPropertyChangedFor(nameof(HasSelectedTitles))]
+    [NotifyPropertyChangedFor(nameof(SelectedTitleCountText))]
     private int _selectedTitleCount;
 
     public bool HasSelectedTitles => SelectedTitleCount > 0;
+    public string SelectedTitleCountText => $"{SelectedTitleCount} title(s) selected";
     partial void OnSelectedTitleCountChanged(int value) => OnPropertyChanged(nameof(HasSelectedTitles));
 
     // ── Derived ────────────────────────────────────────────────────────────────
