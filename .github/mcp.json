@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "windows": {
+      "command": "C:\\Users\\Andy\\.copilot\\mcp-servers\\windows-mcp\\Sbroenne.WindowsMcp.exe",
+      "args": [],
+      "tools": ["*"]
+    }
+  }
+}
