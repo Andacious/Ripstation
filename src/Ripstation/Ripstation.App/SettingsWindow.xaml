@@ -23,7 +23,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="MakeMKV CLI" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding MakeMkvExePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding MakeMkvExePath, Mode=TwoWay}" />
                             <Button Grid.Column="3" Content="Browse..."
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowseMakeMkv_Click" />
@@ -39,7 +39,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="HandBrakeCLI" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding HandBrakeExePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding HandBrakeExePath, Mode=TwoWay}" />
                             <Button Grid.Column="3" Content="Browse..."
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowseHandBrake_Click" />
@@ -55,7 +55,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Preset File" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding PresetFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding PresetFilePath, Mode=TwoWay}" />
                             <Button Grid.Column="3" Content="Browse..."
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowsePreset_Click" />
@@ -69,7 +69,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Preset Name" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding PresetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding PresetName, Mode=TwoWay}" />
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -89,7 +89,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Intermediate (MKV)" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding IntermediatePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding IntermediatePath, Mode=TwoWay}" />
                             <Button Grid.Column="3" Content="Browse..."
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowseIntermediate_Click" />
@@ -105,7 +105,7 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Output (M4V)" Style="{StaticResource LabelStyle}" />
                             <TextBox Grid.Column="1"
-                                     Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding OutputPath, Mode=TwoWay}" />
                             <Button Grid.Column="3" Content="Browse..."
                                     Style="{StaticResource BrowseButtonStyle}"
                                     Click="BrowseOutput_Click" />

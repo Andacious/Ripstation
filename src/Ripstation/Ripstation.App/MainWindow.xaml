@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- ═══ HEADER BAR ══════════════════════════════════════════════════ -->
+        <!-- Header -->
         <Border Grid.Row="0" Background="{ThemeResource AccentBrush}">
             <Grid Margin="20,0">
                 <Grid.ColumnDefinitions>
@@ -20,311 +20,209 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Ripstation"
-                               FontSize="20" FontWeight="Bold" Foreground="White" />
-                    <TextBlock Text="Disc ripper · MakeMKV + HandBrake"
-                               FontSize="12" Foreground="#CCE4FF"
+                    <TextBlock Text="Ripstation" FontSize="20" FontWeight="Bold" Foreground="White" />
+                    <TextBlock Text="Disc ripper  MakeMKV + HandBrake" FontSize="12" Foreground="#CCE4FF"
                                VerticalAlignment="Center" Margin="14,0,0,0" />
                 </StackPanel>
-                <Button Grid.Column="2"
-                        Content="⚙  Settings"
-                        Click="OpenSettings_Click"
-                        VerticalAlignment="Center"
-                        Style="{StaticResource HeaderButtonStyle}" />
+                <Button Grid.Column="2" Content="Settings" Click="OpenSettings_Click" VerticalAlignment="Center" Style="{StaticResource HeaderButtonStyle}" />
             </Grid>
         </Border>
 
-        <!-- ═══ MAIN CONTENT ═════════════════════════════════════════════════ -->
-        <ScrollViewer Grid.Row="1"
-                      VerticalScrollBarVisibility="Auto"
-                      Padding="20,16,20,4">
+        <!-- Main content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,16,20,4">
             <StackPanel>
-
-                <!-- ── DRIVES ────────────────────────────────────────────── -->
+                <!-- Drives card with Pivot -->
                 <Border Style="{StaticResource CardStyle}" Padding="0">
                     <StackPanel>
-                        <!-- Section header row -->
                         <Grid Margin="16,12,16,8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Drives"
-                                       Style="{StaticResource SectionHeaderStyle}"
-                                       Margin="0" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Drives" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}"
-                                        Command="{Binding DetectDrivesCommand}" Margin="0,0,6,0" />
-                                <Button Content="+ Add Drive" Style="{StaticResource BrowseButtonStyle}"
-                                        Command="{Binding AddDriveCommand}" />
+                                <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" Margin="0,0,6,0" />
+                                <Button Content="+ Add Drive" Style="{StaticResource BrowseButtonStyle}" Command="{Binding AddDriveCommand}" />
                             </StackPanel>
                         </Grid>
 
-                        <TabView x:Name="DrivesTabView"
-                                 TabItemsSource="{Binding Drives}"
-                                 TabCloseRequested="OnTabCloseRequested"
-                                 IsAddTabButtonVisible="False"
-                                 Margin="8,0,8,8"
-                                 MinHeight="520">
-                            <TabView.TabItemTemplate>
-                                <DataTemplate>
-                                    <TabViewItem Header="{Binding TabHeader}" IsClosable="True">
-                                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,4,4,4">
-                                            <StackPanel>
-
-                                                <!-- ── Scan ───────────────────────────────────── -->
-                                                <Border Style="{StaticResource CardStyle}">
-                                                    <StackPanel>
-                                                        <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Button Content="⊙  Scan" Style="{StaticResource AccentButtonStyle}"
-                                                                    Command="{Binding ScanCommand}" />
-                                                            <StackPanel Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center"
-                                                                        Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}">
-                                                                <ProgressBar Width="180" Value="{Binding ScanProgress, Mode=OneWay}"
-                                                                             Minimum="0" Maximum="100" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                                                <TextBlock Text="{Binding ScanStatus}" FontSize="12"
-                                                                           Foreground="{ThemeResource MutedTextBrush}"
-                                                                           VerticalAlignment="Center" />
-                                                            </StackPanel>
-                                                        </StackPanel>
-                                                        <TextBlock Text="{Binding DiscName}"
-                                                                   FontSize="13" FontWeight="SemiBold"
-                                                                   Foreground="{ThemeResource AccentBrush}"
-                                                                   Margin="0,10,0,0"
-                                                                   Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
-                                                        <TextBlock Text="{Binding ScanStatus}"
-                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
-                                                                   Margin="0,6,0,0"
-                                                                   Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
-                                                    </StackPanel>
-                                                </Border>
-
-                                                <!-- ── Titles ─────────────────────────────────── -->
-                                                <Border Style="{StaticResource CardStyle}">
-                                                    <StackPanel>
-                                                        <Grid Margin="0,0,0,10">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="Auto" />
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="Auto" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Column="0" Text="Titles"
-                                                                       Style="{StaticResource SectionHeaderStyle}"
-                                                                       Margin="0" VerticalAlignment="Center" />
-                                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                                <Button Content="Select All" Style="{StaticResource BrowseButtonStyle}"
-                                                                        Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
-                                                                <Button Content="Deselect All" Style="{StaticResource BrowseButtonStyle}"
-                                                                        Command="{Binding DeselectAllCommand}" />
-                                                            </StackPanel>
-                                                        </Grid>
-
-                                                        <!-- Titles list with header + rows -->
-                                                        <Border Background="{ThemeResource SurfaceBrush}"
-                                                                BorderBrush="{ThemeResource CardBorderBrush}"
-                                                                BorderThickness="1"
-                                                                MaxHeight="240">
-                                                            <Grid>
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="*"/>
-                                                                </Grid.RowDefinitions>
-                                                                <!-- Column headers -->
-                                                                <Border Grid.Row="0"
-                                                                        Background="{ThemeResource ColumnHeaderBrush}"
-                                                                        BorderBrush="{ThemeResource GridLineBrush}"
-                                                                        BorderThickness="0,0,0,1">
-                                                                    <Grid Padding="4,5">
-                                                                        <Grid.ColumnDefinitions>
-                                                                            <ColumnDefinition Width="36"/>
-                                                                            <ColumnDefinition Width="44"/>
-                                                                            <ColumnDefinition Width="*"/>
-                                                                            <ColumnDefinition Width="72"/>
-                                                                            <ColumnDefinition Width="80"/>
-                                                                            <ColumnDefinition Width="80"/>
-                                                                            <ColumnDefinition Width="160"/>
-                                                                        </Grid.ColumnDefinitions>
-                                                                        <TextBlock Grid.Column="0" Text="✓" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"
-                                                                                   HorizontalAlignment="Center"/>
-                                                                        <TextBlock Grid.Column="1" Text="ID" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                        <TextBlock Grid.Column="2" Text="Name" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                        <TextBlock Grid.Column="3" Text="Ch" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                        <TextBlock Grid.Column="4" Text="Duration" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                        <TextBlock Grid.Column="5" Text="Size" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                        <TextBlock Grid.Column="6" Text="File" FontSize="11"
-                                                                                   Foreground="{ThemeResource MutedTextBrush}"/>
-                                                                    </Grid>
-                                                                </Border>
-                                                                <!-- Data rows -->
-                                                                <ListView Grid.Row="1"
-                                                                          ItemsSource="{Binding Titles}"
-                                                                          SelectionMode="None">
-                                                                    <ListView.ItemContainerStyle>
-                                                                        <Style TargetType="ListViewItem">
-                                                                            <Setter Property="Padding" Value="0"/>
-                                                                            <Setter Property="MinHeight" Value="0"/>
-                                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                                        </Style>
-                                                                    </ListView.ItemContainerStyle>
-                                                                    <ListView.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <Border BorderBrush="{ThemeResource GridLineBrush}"
-                                                                                    BorderThickness="0,0,0,1">
-                                                                                <Grid Padding="4,3">
-                                                                                    <Grid.ColumnDefinitions>
-                                                                                        <ColumnDefinition Width="36"/>
-                                                                                        <ColumnDefinition Width="44"/>
-                                                                                        <ColumnDefinition Width="*"/>
-                                                                                        <ColumnDefinition Width="72"/>
-                                                                                        <ColumnDefinition Width="80"/>
-                                                                                        <ColumnDefinition Width="80"/>
-                                                                                        <ColumnDefinition Width="160"/>
-                                                                                    </Grid.ColumnDefinitions>
-                                                                                    <CheckBox Grid.Column="0"
-                                                                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
-                                                                                              Padding="0" MinWidth="0"
-                                                                                              HorizontalAlignment="Center"
-                                                                                              VerticalAlignment="Center"/>
-                                                                                    <TextBlock Grid.Column="1" Text="{Binding Id}"
-                                                                                               FontSize="13" VerticalAlignment="Center"/>
-                                                                                    <TextBlock Grid.Column="2" Text="{Binding Name}"
-                                                                                               FontSize="13" VerticalAlignment="Center"
-                                                                                               TextTrimming="CharacterEllipsis"/>
-                                                                                    <TextBlock Grid.Column="3" Text="{Binding Chapters}"
-                                                                                               FontSize="13" VerticalAlignment="Center"/>
-                                                                                    <TextBlock Grid.Column="4" Text="{Binding DurationDisplay}"
-                                                                                               FontSize="13" VerticalAlignment="Center"/>
-                                                                                    <TextBlock Grid.Column="5" Text="{Binding SizeDisplay}"
-                                                                                               FontSize="13" VerticalAlignment="Center"/>
-                                                                                    <TextBlock Grid.Column="6" Text="{Binding FileName}"
-                                                                                               FontSize="13" VerticalAlignment="Center"
-                                                                                               TextTrimming="CharacterEllipsis"/>
-                                                                                </Grid>
-                                                                            </Border>
-                                                                        </DataTemplate>
-                                                                    </ListView.ItemTemplate>
-                                                                </ListView>
-                                                            </Grid>
-                                                        </Border>
-
-                                                        <TextBlock Text="{Binding SelectedTitleCountText}"
-                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
-                                                                   Margin="0,8,0,0"
-                                                                   Visibility="{Binding HasTitles, Converter={StaticResource BoolToVis}}" />
-                                                    </StackPanel>
-                                                </Border>
-
-                                                <!-- ── Media Settings ─────────────────────────── -->
-                                                <Border Style="{StaticResource CardStyle}">
-                                                    <StackPanel>
-                                                        <TextBlock Text="Media Settings" Style="{StaticResource SectionHeaderStyle}" />
-
-                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                                            <RadioButton Content="Movie"
-                                                                         GroupName="{Binding RadioGroupName}"
-                                                                         IsChecked="{Binding IsTvMode, Converter={StaticResource InvBool}}" />
-                                                            <RadioButton Content="TV Show"
-                                                                         GroupName="{Binding RadioGroupName}"
-                                                                         IsChecked="{Binding IsTvMode}" />
-                                                        </StackPanel>
-
-                                                        <Grid Margin="0,0,0,10">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="110" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Column="0" Text="Media Name (optional)"
-                                                                       Style="{StaticResource LabelStyle}" />
-                                                            <TextBox Grid.Column="1"
-                                                                     Text="{Binding MediaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                     PlaceholderText="Leave blank to use disc/title name" />
-                                                        </Grid>
-
-                                                        <StackPanel Orientation="Horizontal"
-                                                                    Visibility="{Binding IsTvShow, Converter={StaticResource BoolToVis}}">
-                                                            <TextBlock Text="Season" Style="{StaticResource LabelStyle}" />
-                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                                                     Text="{Binding Season, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBlock Text="Ep Start" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
-                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                                                     Text="{Binding EpisodeStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBlock Text="Ep End" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
-                                                            <TextBox Style="{StaticResource IntTextBoxStyle}"
-                                                                     Text="{Binding EpisodeEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBlock Text="{Binding EpisodeCountText}"
-                                                                       Style="{StaticResource LabelStyle}" Margin="10,0,0,0" />
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                </Border>
-
-                                                <!-- ── Per-Drive Actions ──────────────────────── -->
-                                                <Border Style="{StaticResource CardStyle}">
-                                                    <StackPanel>
-                                                        <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
-
-                                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                            <Button Content="▶  Rip" Style="{StaticResource AccentButtonStyle}"
-                                                                    Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
-                                                            <Button Content="⬛  Cancel" Style="{StaticResource DangerButtonStyle}"
-                                                                    Command="{Binding CancelCommand}" Margin="0,0,8,0" />
-                                                            <Button Content="⏏  Eject" Style="{StaticResource SecondaryButtonStyle}"
-                                                                    Command="{Binding EjectCommand}" />
-                                                        </StackPanel>
-
-                                                        <CheckBox Content="Auto-eject when done"
-                                                                  IsChecked="{Binding EjectWhenDone, Mode=TwoWay}"
-                                                                  Margin="0,0,0,12" />
-
-                                                        <Grid Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="Auto" />
-                                                                <RowDefinition Height="Auto" />
-                                                            </Grid.RowDefinitions>
-                                                            <ProgressBar Grid.Row="0" Value="{Binding RipProgress, Mode=OneWay}"
-                                                                         Minimum="0" Maximum="100" Margin="0,0,0,4" />
-                                                            <TextBlock Grid.Row="1" Text="{Binding RipStatus}"
-                                                                       FontSize="12" Foreground="{ThemeResource MutedTextBrush}" />
-                                                        </Grid>
-
-                                                        <TextBlock Text="{Binding RipStatus}"
-                                                                   FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
-                                                                   Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
-                                                    </StackPanel>
-                                                </Border>
-
-                                            </StackPanel>
-                                        </ScrollViewer>
-                                    </TabViewItem>
+                        <Pivot x:Name="DrivesPivot" ItemsSource="{Binding Drives}" Margin="8,0,8,8" MinHeight="520">
+                            <Pivot.HeaderTemplate>
+                                <DataTemplate x:DataType="vm:DriveViewModel">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                        <Button Content="X" Command="{Binding RemoveSelfCommand}" FontSize="10" Width="18" Height="18" Padding="0" VerticalAlignment="Center" />
+                                    </StackPanel>
                                 </DataTemplate>
-                            </TabView.TabItemTemplate>
-                        </TabView>
+                            </Pivot.HeaderTemplate>
+                            <Pivot.ItemTemplate>
+                                <DataTemplate x:DataType="vm:DriveViewModel">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,4,4,4">
+                                        <StackPanel>
+                                            <!-- Scan card -->
+                                            <Border Style="{StaticResource CardStyle}">
+                                                <StackPanel>
+                                                    <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <Button Content="&#x2299;  Scan" Style="{StaticResource AccentButtonStyle}" Command="{Binding ScanCommand}" />
+
+                                                    </StackPanel>
+                                                    <TextBlock Text="{Binding DiscName}" FontSize="13" FontWeight="SemiBold"
+                                                               Foreground="{ThemeResource AccentBrush}" Margin="0,10,0,0"
+                                                               Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding ScanStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                               Margin="0,6,0,0" Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
+                                                </StackPanel>
+                                            </Border>
+                                            
+                                            
+                                            <!-- Titles card -->
+                                            <Border Style="{StaticResource CardStyle}">
+                                                <StackPanel>
+                                                    <Grid Margin="0,0,0,10">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="*" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Titles" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
+                                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                            <Button Content="Select All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
+                                                            <Button Content="Deselect All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DeselectAllCommand}" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                    <Border Background="{ThemeResource SurfaceBrush}"
+                                                            BorderBrush="{ThemeResource CardBorderBrush}"
+                                                            BorderThickness="1"
+                                                            MaxHeight="240">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="*"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Border Grid.Row="0" Background="{ThemeResource ColumnHeaderBrush}"
+                                                                    BorderBrush="{ThemeResource GridLineBrush}" BorderThickness="0,0,0,1">
+                                                                <Grid Padding="4,5">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="36"/>
+                                                                        <ColumnDefinition Width="44"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="72"/>
+                                                                        <ColumnDefinition Width="80"/>
+                                                                        <ColumnDefinition Width="80"/>
+                                                                        <ColumnDefinition Width="160"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <TextBlock Grid.Column="0" Text="&#x2713;" FontSize="11" Foreground="{ThemeResource MutedTextBrush}" HorizontalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="1" Text="ID" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    <TextBlock Grid.Column="2" Text="Name" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    <TextBlock Grid.Column="3" Text="Ch" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    <TextBlock Grid.Column="4" Text="Duration" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    <TextBlock Grid.Column="5" Text="Size" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                    <TextBlock Grid.Column="6" Text="File" FontSize="11" Foreground="{ThemeResource MutedTextBrush}"/>
+                                                                </Grid>
+                                                            </Border>
+                                                            <ListView Grid.Row="1" ItemsSource="{Binding Titles}" SelectionMode="None">
+                                                                <ListView.ItemContainerStyle>
+                                                                    <Style TargetType="ListViewItem">
+                                                                        <Setter Property="Padding" Value="0"/>
+                                                                        <Setter Property="MinHeight" Value="0"/>
+                                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                                    </Style>
+                                                                </ListView.ItemContainerStyle>
+                                                                <ListView.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border BorderBrush="{ThemeResource GridLineBrush}" BorderThickness="0,0,0,1">
+                                                                            <Grid Padding="4,3">
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition Width="36"/>
+                                                                                    <ColumnDefinition Width="44"/>
+                                                                                    <ColumnDefinition Width="*"/>
+                                                                                    <ColumnDefinition Width="72"/>
+                                                                                    <ColumnDefinition Width="80"/>
+                                                                                    <ColumnDefinition Width="80"/>
+                                                                                    <ColumnDefinition Width="160"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}" Padding="0" MinWidth="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="13" VerticalAlignment="Center"/>
+                                                                                <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                                                <TextBlock Grid.Column="3" Text="{Binding Chapters}" FontSize="13" VerticalAlignment="Center"/>
+                                                                                <TextBlock Grid.Column="4" Text="{Binding DurationDisplay}" FontSize="13" VerticalAlignment="Center"/>
+                                                                                <TextBlock Grid.Column="5" Text="{Binding SizeDisplay}" FontSize="13" VerticalAlignment="Center"/>
+                                                                                <TextBlock Grid.Column="6" Text="{Binding FileName}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ListView.ItemTemplate>
+                                                            </ListView>
+                                                        </Grid>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Border>
+                                            <!-- Media Settings card -->
+                                            <Border Style="{StaticResource CardStyle}">
+                                                <StackPanel>
+                                                    <TextBlock Text="Media Settings" Style="{StaticResource SectionHeaderStyle}" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                                        <RadioButton Content="Movie" GroupName="{Binding RadioGroupName}"
+                                                                     IsChecked="{Binding IsTvMode, Converter={StaticResource InvBool}}" />
+                                                        <RadioButton Content="TV Show" GroupName="{Binding RadioGroupName}"
+                                                                     IsChecked="{Binding IsTvMode}" />
+                                                    </StackPanel>
+                                                    <Grid Margin="0,0,0,10">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="110" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0" Text="Media Name (optional)" Style="{StaticResource LabelStyle}" />
+                                                        <TextBox Grid.Column="1" Text="{Binding MediaName, Mode=TwoWay}" PlaceholderText="Leave blank to use disc/title name" />
+                                                    </Grid>
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding IsTvShow, Converter={StaticResource BoolToVis}}">
+                                                        <TextBlock Text="Season" Style="{StaticResource LabelStyle}" />
+                                                        <TextBox Style="{StaticResource IntTextBoxStyle}" Text="{Binding Season, Mode=TwoWay}" />
+                                                        <TextBlock Text="Ep Start" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
+                                                        <TextBox Style="{StaticResource IntTextBoxStyle}" Text="{Binding EpisodeStart, Mode=TwoWay}" />
+                                                        <TextBlock Text="Ep End" Style="{StaticResource LabelStyle}" Margin="12,0,6,0" />
+                                                        <TextBox Style="{StaticResource IntTextBoxStyle}" Text="{Binding EpisodeEnd, Mode=TwoWay}" />
+                                                        <TextBlock Text="{Binding EpisodeCountText}" Style="{StaticResource LabelStyle}" Margin="10,0,0,0" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+
+                                            <!-- Actions card -->
+                                            <Border Style="{StaticResource CardStyle}">
+                                                <StackPanel>
+                                                    <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                        <Button Content="&#x25B6;  Rip" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
+                                                        <Button Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
+                                                        <Button Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" />
+                                                    </StackPanel>
+                                                    <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" Margin="0,0,0,12" />
+
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </DataTemplate>
+                            </Pivot.ItemTemplate>
+                        </Pivot>
                     </StackPanel>
                 </Border>
 
-                <!-- ── GLOBAL ACTIONS ────────────────────────────────────── -->
+                <!-- Global Actions card -->
                 <Border Style="{StaticResource CardStyle}">
                     <StackPanel>
                         <TextBlock Text="Global Actions" Style="{StaticResource SectionHeaderStyle}" />
                         <StackPanel Orientation="Horizontal">
-                            <Button Content="▶▶  Rip All Drives" Style="{StaticResource AccentButtonStyle}"
-                                    Command="{Binding RipAllCommand}" Margin="0,0,8,0" />
-                            <Button Content="⬛  Cancel All" Style="{StaticResource DangerButtonStyle}"
-                                    Command="{Binding CancelAllCommand}" Margin="0,0,8,0" />
-                            <Button Content="⏏  Eject All" Style="{StaticResource SecondaryButtonStyle}"
-                                    Command="{Binding EjectAllCommand}" />
+                            <Button Content="Rip All Drives" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipAllCommand}" Margin="0,0,8,0" />
+                            <Button Content="Cancel All" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelAllCommand}" Margin="0,0,8,0" />
+                            <Button Content="Eject All" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectAllCommand}" />
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
-                <!-- ── LOG ───────────────────────────────────────────────── -->
+                <!-- Log card -->
                 <Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
                     <StackPanel>
                         <Grid Margin="0,0,0,10">
@@ -333,41 +231,33 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="Log"
-                                       Style="{StaticResource SectionHeaderStyle}"
-                                       Margin="0" VerticalAlignment="Center" />
-                            <Button Grid.Column="2" Content="Clear"
-                                    Style="{StaticResource BrowseButtonStyle}"
-                                    Command="{Binding ClearLogCommand}" />
+                            <TextBlock Grid.Column="0" Text="Log" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
+                            <Button Grid.Column="2" Content="Clear" Style="{StaticResource BrowseButtonStyle}" Command="{Binding ClearLogCommand}" />
                         </Grid>
-                        <TextBox x:Name="LogTextBox"
-                                 Text="{Binding LogText, Mode=OneWay}"
-                                 IsReadOnly="True"
-                                 Height="180"
-                                 FontFamily="Consolas"
-                                 FontSize="11"
-                                 Background="#1E1E1E"
-                                 Foreground="#DCDCDC"
-                                 BorderThickness="0"
-                                 TextWrapping="NoWrap"
+                        <TextBox x:Name="LogTextBox" Text="{Binding LogText, Mode=OneWay}" IsReadOnly="True"
+                                 Height="180" FontFamily="Consolas" FontSize="11" Background="#1E1E1E" Foreground="#DCDCDC"
+                                 BorderThickness="0" TextWrapping="NoWrap"
                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                 Padding="4" />
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto" Padding="4" />
                     </StackPanel>
                 </Border>
-
             </StackPanel>
         </ScrollViewer>
 
-        <!-- ═══ STATUS BAR ═══════════════════════════════════════════════════ -->
-        <Border Grid.Row="2"
-                Background="{ThemeResource StatusBarBrush}"
-                BorderBrush="{ThemeResource StatusBarBorderBrush}"
-                BorderThickness="0,1,0,0"
-                Padding="16,4">
-            <TextBlock Text="{Binding StatusText}"
-                       FontSize="11" Foreground="{ThemeResource MutedTextBrush}" />
+        <!-- Status bar -->
+        <Border Grid.Row="2" Background="{ThemeResource StatusBarBrush}" BorderBrush="{ThemeResource StatusBarBorderBrush}"
+                BorderThickness="0,1,0,0" Padding="16,4">
+            <TextBlock Text="{Binding StatusText}" FontSize="11" Foreground="{ThemeResource MutedTextBrush}" />
         </Border>
-
     </Grid>
 </Window>
+
+
+
+
+
+
+
+
+
+

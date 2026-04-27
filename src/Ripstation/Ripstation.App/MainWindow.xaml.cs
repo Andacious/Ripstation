@@ -49,10 +49,4 @@ public sealed partial class MainWindow : Window
         var win = new SettingsWindow(_vm.Settings);
         win.Activate();
     }
-
-    private void OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
-    {
-        if (args.Item is DriveViewModel drive)
-            _vm?.RemoveDriveCommand.Execute(drive);
-    }
 }

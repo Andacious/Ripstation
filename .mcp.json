@@ -1,5 +1,5 @@
 {
-  "servers": {
+  "mcpServers": {
     "windows": {
       "type": "stdio",
       "command": "C:\\Users\\Andy\\.copilot\\mcp-servers\\windows-mcp\\Sbroenne.WindowsMcp.exe",

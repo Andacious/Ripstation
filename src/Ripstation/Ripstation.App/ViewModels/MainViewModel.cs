@@ -81,10 +81,13 @@ public partial class MainViewModel : ObservableObject
 
     private DriveViewModel CreateDrive(int diskNumber, string driveLetter = "")
     {
-        return new DriveViewModel(
+        DriveViewModel? drive = null;
+        drive = new DriveViewModel(
             diskNumber, Settings,
             _makeMkv, _handBrake, _naming, _driveService,
-            LogFromThread, driveLetter);
+            LogFromThread, driveLetter,
+            onRemoveSelf: () => RemoveDriveCommand.Execute(drive!));
+        return drive;
     }
 
     [RelayCommand]
