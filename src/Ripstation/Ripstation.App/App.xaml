@@ -65,6 +65,7 @@
             <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
             <conv:BoolToVisibilityConverter x:Key="InvBoolToVis" TrueValue="Collapsed" FalseValue="Visible" />
             <conv:InverseBoolConverter x:Key="InvBool" />
+            <conv:ProgressWidthConverter x:Key="ProgressWidth" />
 
             <!-- Typography -->
             <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
@@ -297,13 +298,6 @@
                 <Setter Property="CornerRadius" Value="6" />
                 <Setter Property="Padding" Value="16" />
                 <Setter Property="Margin" Value="0,0,0,12" />
-            </Style>
-
-            <!-- ProgressBar -->
-            <Style TargetType="ProgressBar">
-                <Setter Property="Height" Value="6" />
-                <Setter Property="Foreground" Value="{ThemeResource AccentBrush}" />
-                <Setter Property="Background" Value="{ThemeResource ProgressTrackBrush}" />
             </Style>
 
             <!-- RadioButton -->
