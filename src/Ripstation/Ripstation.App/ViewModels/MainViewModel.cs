@@ -4,6 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ripstation.Services;
 
+#pragma warning disable MVVMTK0045 // Use partial property instead of [ObservableProperty] field (AOT compat warning only)
+
 namespace Ripstation.ViewModels;
 
 public partial class MainViewModel : ObservableObject

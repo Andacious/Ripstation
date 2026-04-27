@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Ripstation.Services;
 
+#pragma warning disable MVVMTK0045 // Use partial property instead of [ObservableProperty] field (AOT compat warning only — reflection bindings work fine)
+
 namespace Ripstation.ViewModels;
 
 public partial class DriveViewModel : ObservableObject

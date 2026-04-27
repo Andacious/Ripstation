@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
+#pragma warning disable MVVMTK0045 // Use partial property — AOT compat only; reflection bindings work fine
+
 namespace Ripstation.ViewModels;
 
 /// <summary>

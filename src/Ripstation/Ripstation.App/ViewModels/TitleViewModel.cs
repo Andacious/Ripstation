@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using Ripstation.Models;
 
+#pragma warning disable MVVMTK0045 // Use partial property — AOT compat only; reflection bindings work fine
+
 namespace Ripstation.ViewModels;
 
 public partial class TitleViewModel(Title title) : ObservableObject

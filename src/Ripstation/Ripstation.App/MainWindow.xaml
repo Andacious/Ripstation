@@ -73,6 +73,8 @@
                                                                Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
                                                     <TextBlock Text="{Binding ScanStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
                                                                Margin="0,6,0,0" Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
+                                                    <ProgressBar Value="{Binding ScanProgress}" Margin="0,8,0,0"
+                                                                 Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}" />
                                                 </StackPanel>
                                             </Border>
                                             
@@ -157,6 +159,9 @@
                                                             </ListView>
                                                         </Grid>
                                                     </Border>
+                                                    <TextBlock Text="{Binding SelectedTitleCountText}" FontSize="11"
+                                                               Foreground="{ThemeResource MutedTextBrush}" Margin="0,6,0,0"
+                                                               Visibility="{Binding HasSelectedTitles, Converter={StaticResource BoolToVis}}" />
                                                 </StackPanel>
                                             </Border>
                                             <!-- Media Settings card -->
@@ -198,8 +203,11 @@
                                                         <Button Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
                                                         <Button Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" />
                                                     </StackPanel>
-                                                    <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" Margin="0,0,0,12" />
-
+                                                    <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" Margin="0,0,0,8" />
+                                                    <ProgressBar Value="{Binding RipProgress}" Margin="0,0,0,6"
+                                                                 Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}" />
+                                                    <TextBlock Text="{Binding RipStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                               Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
                                                 </StackPanel>
                                             </Border>
                                         </StackPanel>
