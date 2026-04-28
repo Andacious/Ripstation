@@ -56,21 +56,22 @@
                                 <DataTemplate x:DataType="vm:DriveViewModel">
                                     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,4,4,4">
                                         <StackPanel>
-                                            <!-- Scan card -->
+                                            <!-- Scan + Actions card -->
                                             <Border Style="{StaticResource CardStyle}">
                                                 <StackPanel>
-                                                    <TextBlock Text="Scan Disc" Style="{StaticResource SectionHeaderStyle}" />
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Button Content="&#x2299;  Scan" Style="{StaticResource AccentButtonStyle}" Command="{Binding ScanCommand}" />
-
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                        <Button Content="&#x2299;  Scan" Style="{StaticResource AccentButtonStyle}" Command="{Binding ScanCommand}" Margin="0,0,8,0" />
+                                                        <Button Content="&#x25B6;  Rip" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
+                                                        <Button Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
+                                                        <Button Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" Margin="0,0,12,0" />
+                                                        <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                     <TextBlock Text="{Binding DiscName}" FontSize="13" FontWeight="SemiBold"
-                                                               Foreground="{ThemeResource AccentBrush}" Margin="0,10,0,0"
+                                                               Foreground="{ThemeResource AccentBrush}" Margin="0,2,0,0"
                                                                Visibility="{Binding IsDiscNameVisible, Converter={StaticResource BoolToVis}}" />
                                                     <TextBlock Text="{Binding ScanStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
-                                                               Margin="0,6,0,0" Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
-                                                    <!-- Custom progress track (ProgressBar control crashes in WinUI 3 WinAppSDK 1.8) -->
-                                                    <Grid Height="6" Margin="0,8,0,0"
+                                                               Margin="0,4,0,0" Visibility="{Binding IsScanStatusVisible, Converter={StaticResource BoolToVis}}" />
+                                                    <Grid Height="6" Margin="0,6,0,0"
                                                           Visibility="{Binding IsScanning, Converter={StaticResource BoolToVis}}">
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="{Binding ScanProgress, Converter={StaticResource ProgressWidth}}" />
@@ -79,6 +80,17 @@
                                                         <Rectangle Grid.Column="0" Fill="{ThemeResource AccentBrush}" RadiusX="3" RadiusY="3" />
                                                         <Rectangle Grid.Column="1" Fill="{ThemeResource ProgressTrackBrush}" RadiusX="3" RadiusY="3" />
                                                     </Grid>
+                                                    <Grid Height="6" Margin="0,4,0,0"
+                                                          Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="{Binding RipProgress, Converter={StaticResource ProgressWidth}}" />
+                                                            <ColumnDefinition Width="{Binding RipProgress, Converter={StaticResource ProgressWidth}, ConverterParameter=track}" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <Rectangle Grid.Column="0" Fill="{ThemeResource AccentBrush}" RadiusX="3" RadiusY="3" />
+                                                        <Rectangle Grid.Column="1" Fill="{ThemeResource ProgressTrackBrush}" RadiusX="3" RadiusY="3" />
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding RipStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
+                                                               Margin="0,4,0,0" Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
                                                 </StackPanel>
                                             </Border>
                                             
@@ -198,30 +210,8 @@
                                                 </StackPanel>
                                             </Border>
 
-                                            <!-- Actions card -->
-                                            <Border Style="{StaticResource CardStyle}">
-                                                <StackPanel>
-                                                    <TextBlock Text="Actions" Style="{StaticResource SectionHeaderStyle}" />
-                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                        <Button Content="&#x25B6;  Rip" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
-                                                        <Button Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
-                                                        <Button Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" />
-                                                    </StackPanel>
-                                                    <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" Margin="0,0,0,8" />
-                                                    <!-- Custom progress track (ProgressBar control crashes in WinUI 3 WinAppSDK 1.8) -->
-                                                    <Grid Height="6" Margin="0,0,0,6"
-                                                          Visibility="{Binding IsRipping, Converter={StaticResource BoolToVis}}">
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="{Binding RipProgress, Converter={StaticResource ProgressWidth}}" />
-                                                            <ColumnDefinition Width="{Binding RipProgress, Converter={StaticResource ProgressWidth}, ConverterParameter=track}" />
-                                                        </Grid.ColumnDefinitions>
-                                                        <Rectangle Grid.Column="0" Fill="{ThemeResource AccentBrush}" RadiusX="3" RadiusY="3" />
-                                                        <Rectangle Grid.Column="1" Fill="{ThemeResource ProgressTrackBrush}" RadiusX="3" RadiusY="3" />
-                                                    </Grid>
-                                                    <TextBlock Text="{Binding RipStatus}" FontSize="12" Foreground="{ThemeResource MutedTextBrush}"
-                                                               Visibility="{Binding IsRipStatusIdleVisible, Converter={StaticResource BoolToVis}}" />
-                                                </StackPanel>
-                                            </Border>
+
+
                                         </StackPanel>
                                     </ScrollViewer>
                                 </DataTemplate>
