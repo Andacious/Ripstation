@@ -90,6 +90,11 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
+        // Refresh volume labels on existing drives (disc may have changed)
+        var detectedByIndex = detected.ToDictionary(d => d.DiscIndex, d => d.DrivePath);
+        foreach (var drive in Drives)
+            drive.RefreshVolumeLabel();
+
         // Non-destructive: add drives not already represented
         var existingIndices = Drives.Select(d => d.DiskNumber).ToHashSet();
         int added = 0;

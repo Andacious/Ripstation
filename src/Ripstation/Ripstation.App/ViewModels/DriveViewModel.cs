@@ -99,6 +99,11 @@ public partial class DriveViewModel : ObservableObject
 
     public bool IsDiscNameVisible => !string.IsNullOrEmpty(DiscName);
 
+    /// <summary>OS volume label — read from the drive at detection time, never cleared by scanning.</summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(TabHeader))]
+    private string _volumeLabel = string.Empty;
+
     // ── Rip state ──────────────────────────────────────────────────────────────
 
     [ObservableProperty]
@@ -140,9 +145,11 @@ public partial class DriveViewModel : ObservableObject
                 ? $"Drive {DiskNumber}"
                 : DriveLetter.TrimEnd('\\', '/');
 
-            return string.IsNullOrEmpty(DiscName)
-                ? driveId
-                : $"{DiscName} ({driveId})";
+            var label = !string.IsNullOrEmpty(DiscName) ? DiscName
+                      : !string.IsNullOrEmpty(VolumeLabel) ? VolumeLabel
+                      : null;
+
+            return label is null ? driveId : $"{label} ({driveId})";
         }
     }
 
@@ -174,11 +181,7 @@ public partial class DriveViewModel : ObservableObject
 
         // Show the OS volume label immediately so the tab has a name before scanning
         if (!string.IsNullOrEmpty(driveLetter))
-        {
-            var label = driveService.GetVolumeLabel(driveLetter);
-            if (!string.IsNullOrEmpty(label))
-                _discName = label;
-        }
+            _volumeLabel = driveService.GetVolumeLabel(driveLetter) ?? string.Empty;
 
         Titles.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasTitles));
 
@@ -188,6 +191,13 @@ public partial class DriveViewModel : ObservableObject
             ScanCommand.NotifyCanExecuteChanged();
             RipStandaloneCommand.NotifyCanExecuteChanged();
         };
+    }
+
+    /// <summary>Re-reads the OS volume label (call after Detect Drives to pick up newly inserted discs).</summary>
+    public void RefreshVolumeLabel()
+    {
+        if (!string.IsNullOrEmpty(DriveLetter))
+            VolumeLabel = _driveService.GetVolumeLabel(DriveLetter) ?? string.Empty;
     }
 
     // ── Scan command ───────────────────────────────────────────────────────────
