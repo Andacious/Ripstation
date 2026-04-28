@@ -42,18 +42,14 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Drives" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" Margin="0,0,6,0" />
-                                <Button Content="+ Add Drive" Style="{StaticResource BrowseButtonStyle}" Command="{Binding AddDriveCommand}" />
+                                <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" />
                             </StackPanel>
                         </Grid>
 
                         <Pivot x:Name="DrivesPivot" ItemsSource="{Binding Drives}" Margin="8,0,8,8" MinHeight="520">
                             <Pivot.HeaderTemplate>
                                 <DataTemplate x:DataType="vm:DriveViewModel">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                        <Button Content="X" Command="{Binding RemoveSelfCommand}" FontSize="10" Width="18" Height="18" Padding="0" VerticalAlignment="Center" />
-                                    </StackPanel>
+                                    <TextBlock Text="{Binding TabHeader}" VerticalAlignment="Center" />
                                 </DataTemplate>
                             </Pivot.HeaderTemplate>
                             <Pivot.ItemTemplate>

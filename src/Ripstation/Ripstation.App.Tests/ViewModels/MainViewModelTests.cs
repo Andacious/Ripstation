@@ -32,12 +32,10 @@ public class MainViewModelTests
     // ── Drive detection at startup ────────────────────────────────────────────
 
     [Fact]
-    public void Constructor_NoOpticalDrives_Creates2DefaultDrives()
+    public void Constructor_NoOpticalDrives_CreatesNoDrives()
     {
         var vm = Build(new FakeDriveService(/* no drives */));
-        Assert.Equal(2, vm.Drives.Count);
-        Assert.Equal(0, vm.Drives[0].DiskNumber);
-        Assert.Equal(1, vm.Drives[1].DiskNumber);
+        Assert.Empty(vm.Drives);
     }
 
     [Fact]
@@ -56,56 +54,6 @@ public class MainViewModelTests
         var ds = new FakeDriveService((0, @"D:\"));
         var vm = Build(ds);
         Assert.Equal(@"D:\", vm.Drives[0].DriveLetter);
-    }
-
-    // ── AddDriveCommand ───────────────────────────────────────────────────────
-
-    [Fact]
-    public void AddDrive_IncreasesDriveCount()
-    {
-        var vm = Build();
-        var before = vm.Drives.Count;
-        vm.AddDriveCommand.Execute(null);
-        Assert.Equal(before + 1, vm.Drives.Count);
-    }
-
-    [Fact]
-    public void AddDrive_NewDriveHasDiskNumberMaxPlusOne()
-    {
-        var vm = Build();
-        // Default 2 drives: 0, 1
-        vm.AddDriveCommand.Execute(null);
-        Assert.Equal(2, vm.Drives[^1].DiskNumber);
-    }
-
-    [Fact]
-    public void AddDrive_Empty_StartsWith0()
-    {
-        var ds = new FakeDriveService((5, @"F:\"));
-        var vm = Build(ds);
-        vm.Drives.Clear();
-        vm.AddDriveCommand.Execute(null);
-        Assert.Equal(0, vm.Drives[0].DiskNumber);
-    }
-
-    // ── RemoveDriveCommand ────────────────────────────────────────────────────
-
-    [Fact]
-    public void RemoveDrive_RemovesDriveFromCollection()
-    {
-        var vm = Build();
-        var driveToRemove = vm.Drives[0];
-        vm.RemoveDriveCommand.Execute(driveToRemove);
-        Assert.DoesNotContain(driveToRemove, vm.Drives);
-    }
-
-    [Fact]
-    public void RemoveDrive_Null_DoesNothing()
-    {
-        var vm = Build();
-        var before = vm.Drives.Count;
-        vm.RemoveDriveCommand.Execute(null);
-        Assert.Equal(before, vm.Drives.Count);
     }
 
     // ── DetectDrivesCommand ───────────────────────────────────────────────────
@@ -160,7 +108,8 @@ public class MainViewModelTests
     [Fact]
     public void RipAllCommand_CanExecute_WhenAtLeastOneDriveHasTitlesSelected()
     {
-        var vm = Build();
+        var ds = new FakeDriveService((0, @"D:\"));
+        var vm = Build(ds);
         vm.Drives[0].Titles.Add(MakeSelectedTitle());
         vm.Drives[0].SelectedTitleCount = 1;
         Assert.True(vm.RipAllCommand.CanExecute(null));
@@ -171,9 +120,10 @@ public class MainViewModelTests
     [Fact]
     public async Task RipAllAsync_OutputCollision_LogsErrorAndAborts()
     {
+        var ds = new FakeDriveService((0, @"D:\"), (1, @"E:\"));
         var makeMkv = Substitute.For<IMakeMkvService>();
         var handBrake = Substitute.For<IHandBrakeService>();
-        var vm = Build(makeMkv: makeMkv, handBrake: handBrake);
+        var vm = Build(ds, makeMkv: makeMkv, handBrake: handBrake);
 
         // Set both drives to produce the same output path
         vm.Drives[0].MediaName = "SharedName";

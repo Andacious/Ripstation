@@ -65,48 +65,21 @@ public partial class MainViewModel : ObservableObject
         Drives.CollectionChanged += (_, _) => OnPropertyChanged(nameof(StatusText));
         Settings.PropertyChanged += (_, _) => OnPropertyChanged(nameof(StatusText));
 
-        // Populate drives from attached optical drives; fall back to two defaults
+        // Populate drives from attached optical drives on startup
         var detected = _driveService.GetOpticalDrives();
-        if (detected.Count > 0)
-        {
-            foreach (var (idx, path) in detected)
-                Drives.Add(CreateDrive(idx, path));
-        }
-        else
-        {
-            Drives.Add(CreateDrive(0));
-            Drives.Add(CreateDrive(1));
-        }
+        foreach (var (idx, path) in detected)
+            Drives.Add(CreateDrive(idx, path));
     }
 
     // ── Drive management ──────────────────────────────────────────────────────
 
     private DriveViewModel CreateDrive(int diskNumber, string driveLetter = "")
     {
-        DriveViewModel? drive = null;
-        drive = new DriveViewModel(
+        return new DriveViewModel(
             diskNumber, Settings,
             _makeMkv, _handBrake, _naming, _driveService,
-            LogFromThread, driveLetter,
-            onRemoveSelf: () => RemoveDriveCommand.Execute(drive!));
-        return drive;
+            LogFromThread, driveLetter);
     }
-
-    [RelayCommand]
-    private void AddDrive()
-    {
-        int next = Drives.Count > 0 ? Drives.Max(d => d.DiskNumber) + 1 : 0;
-        Drives.Add(CreateDrive(next));
-    }
-
-    [RelayCommand]
-    private void RemoveDrive(DriveViewModel drive)
-    {
-        if (drive is null) return;
-        drive.CancelCurrentOperation();
-        Drives.Remove(drive);
-    }
-
     [RelayCommand]
     private void DetectDrives()
     {

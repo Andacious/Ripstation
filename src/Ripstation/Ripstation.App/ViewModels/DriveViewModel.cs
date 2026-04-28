@@ -150,11 +150,6 @@ public partial class DriveViewModel : ObservableObject
 
     // ── Constructor ────────────────────────────────────────────────────────────
 
-    private Action? _onRemoveSelf;
-
-    [RelayCommand]
-    private void RemoveSelf() => _onRemoveSelf?.Invoke();
-
     public DriveViewModel(
         int diskNumber,
         GlobalSettings settings,
@@ -164,8 +159,7 @@ public partial class DriveViewModel : ObservableObject
         IDriveService driveService,
         Action<string> sharedLog,
         string driveLetter = "",
-        IFileSystem? fileSystem = null,
-        Action? onRemoveSelf = null)
+        IFileSystem? fileSystem = null)
     {
         _diskNumber = diskNumber;
         _wmpDriveIndex = diskNumber;
@@ -177,7 +171,6 @@ public partial class DriveViewModel : ObservableObject
         _driveService = driveService;
         _sharedLog = sharedLog;
         _fs = fileSystem ?? new FileSystem();
-        _onRemoveSelf = onRemoveSelf;
 
         // Show the OS volume label immediately so the tab has a name before scanning
         if (!string.IsNullOrEmpty(driveLetter))
