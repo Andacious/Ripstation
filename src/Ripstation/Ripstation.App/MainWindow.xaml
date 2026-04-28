@@ -12,13 +12,14 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{ThemeResource AccentBrush}">
+        <!-- Header (acts as custom title bar via ExtendsContentIntoTitleBar) -->
+        <Border x:Name="AppTitleBar" Grid.Row="0" Background="{ThemeResource AccentBrush}">
             <Grid Margin="20,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition x:Name="CaptionButtonColumn" Width="0" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Ripstation" FontSize="20" FontWeight="Bold" Foreground="White" />
