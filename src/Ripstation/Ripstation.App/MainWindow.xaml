@@ -41,7 +41,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Drives" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
-                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
+                                <Button Content="Rip All Drives" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipAllCommand}" />
+                                <Button Content="Cancel All" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelAllCommand}" />
+                                <Button Content="Eject All" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectAllCommand}" />
+                                <Border Width="1" Background="{ThemeResource CardBorderBrush}" Margin="4,6" />
                                 <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" />
                             </StackPanel>
                         </Grid>
@@ -217,18 +221,6 @@
                                 </DataTemplate>
                             </Pivot.ItemTemplate>
                         </Pivot>
-                    </StackPanel>
-                </Border>
-
-                <!-- Global Actions card -->
-                <Border Style="{StaticResource CardStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Global Actions" Style="{StaticResource SectionHeaderStyle}" />
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Rip All Drives" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipAllCommand}" Margin="0,0,8,0" />
-                            <Button Content="Cancel All" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelAllCommand}" Margin="0,0,8,0" />
-                            <Button Content="Eject All" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectAllCommand}" />
-                        </StackPanel>
                     </StackPanel>
                 </Border>
 
