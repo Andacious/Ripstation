@@ -2,7 +2,8 @@
     x:Class="Ripstation.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:conv="using:Ripstation.Converters">
+    xmlns:conv="using:Ripstation.Converters"
+    xmlns:ctrl="using:Ripstation.Controls">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
@@ -164,7 +165,7 @@
                                                 <Setter Target="Content.Foreground" Value="{ThemeResource DisabledAccentTextBrush}" />
                                             </VisualState.Setters>
                                         </VisualState>
-                                    </VisualStateGroup>
+                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
                                 <ContentPresenter x:Name="Content"
                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -333,13 +334,13 @@
             </Style>
 
             <!-- RadioButton -->
-            <Style TargetType="RadioButton">
+            <Style TargetType="ctrl:HandCursorRadioButton">
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="Margin" Value="0,0,12,0" />
                 <Setter Property="Foreground" Value="{ThemeResource HeaderTextBrush}" />
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="RadioButton">
+                        <ControlTemplate TargetType="ctrl:HandCursorRadioButton">
                             <Grid x:Name="Root">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
@@ -395,12 +396,12 @@
             </Style>
 
             <!-- CheckBox -->
-            <Style TargetType="CheckBox">
+            <Style TargetType="ctrl:HandCursorCheckBox">
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="Foreground" Value="{ThemeResource HeaderTextBrush}" />
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="CheckBox">
+                        <ControlTemplate TargetType="ctrl:HandCursorCheckBox">
                             <Grid x:Name="Root">
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">

@@ -2,7 +2,8 @@
     x:Class="Ripstation.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:Ripstation.ViewModels">
+    xmlns:vm="using:Ripstation.ViewModels"
+    xmlns:ctrl="using:Ripstation.Controls">
 
     <Grid x:Name="RootGrid" Background="{ThemeResource AppBackgroundBrush}">
         <Grid.RowDefinitions>
@@ -24,7 +25,7 @@
                     <TextBlock Text="Disc ripper  MakeMKV + HandBrake" FontSize="12" Foreground="#CCE4FF"
                                VerticalAlignment="Center" Margin="14,0,0,0" />
                 </StackPanel>
-                <Button Grid.Column="2" Content="Settings" Click="OpenSettings_Click" VerticalAlignment="Center" Style="{StaticResource HeaderButtonStyle}" />
+                <ctrl:HandCursorButton Grid.Column="2" Content="Settings" Click="OpenSettings_Click" VerticalAlignment="Center" Style="{StaticResource HeaderButtonStyle}" />
             </Grid>
         </Border>
 
@@ -42,11 +43,11 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Drives" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
                             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6">
-                                <Button Content="Rip All Drives" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipAllCommand}" />
-                                <Button Content="Cancel All" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelAllCommand}" />
-                                <Button Content="Eject All" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectAllCommand}" />
+                                <ctrl:HandCursorButton Content="Rip All Drives" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipAllCommand}" />
+                                <ctrl:HandCursorButton Content="Cancel All" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelAllCommand}" />
+                                <ctrl:HandCursorButton Content="Eject All" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectAllCommand}" />
                                 <Border Width="1" Background="{ThemeResource CardBorderBrush}" Margin="4,6" />
-                                <Button Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" />
+                                <ctrl:HandCursorButton Content="Detect Drives" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DetectDrivesCommand}" />
                             </StackPanel>
                         </Grid>
 
@@ -64,11 +65,11 @@
                                             <Border Style="{StaticResource CardStyle}">
                                                 <StackPanel>
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                        <Button Content="&#x2299;  Scan" Style="{StaticResource AccentButtonStyle}" Command="{Binding ScanCommand}" Margin="0,0,8,0" />
-                                                        <Button Content="&#x25B6;  Rip" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
-                                                        <Button Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
-                                                        <Button Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" Margin="0,0,12,0" />
-                                                        <CheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" VerticalAlignment="Center" />
+                                                        <ctrl:HandCursorButton Content="&#x2299;  Scan" Style="{StaticResource AccentButtonStyle}" Command="{Binding ScanCommand}" Margin="0,0,8,0" />
+                                                        <ctrl:HandCursorButton Content="&#x25B6;  Rip" Style="{StaticResource AccentButtonStyle}" Command="{Binding RipStandaloneCommand}" Margin="0,0,8,0" />
+                                                        <ctrl:HandCursorButton Content="&#x2B1B;  Cancel" Style="{StaticResource DangerButtonStyle}" Command="{Binding CancelCommand}" Margin="0,0,8,0" />
+                                                        <ctrl:HandCursorButton Content="&#x23CF;  Eject" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding EjectCommand}" Margin="0,0,12,0" />
+                                                        <ctrl:HandCursorCheckBox Content="Auto-eject when done" IsChecked="{Binding EjectWhenDone, Mode=TwoWay}" VerticalAlignment="Center" />
                                                     </StackPanel>
                                                     <TextBlock Text="{Binding DiscName}" FontSize="13" FontWeight="SemiBold"
                                                                Foreground="{ThemeResource AccentBrush}" Margin="0,2,0,0"
@@ -110,8 +111,8 @@
                                                         </Grid.ColumnDefinitions>
                                                         <TextBlock Grid.Column="0" Text="Titles" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
                                                         <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                                            <Button Content="Select All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
-                                                            <Button Content="Deselect All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DeselectAllCommand}" />
+                                                            <ctrl:HandCursorButton Content="Select All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding SelectAllCommand}" Margin="0,0,6,0" />
+                                                            <ctrl:HandCursorButton Content="Deselect All" Style="{StaticResource BrowseButtonStyle}" Command="{Binding DeselectAllCommand}" />
                                                         </StackPanel>
                                                     </Grid>
                                                     <Border Background="{ThemeResource SurfaceBrush}"
@@ -165,7 +166,7 @@
                                                                                     <ColumnDefinition Width="80"/>
                                                                                     <ColumnDefinition Width="160"/>
                                                                                 </Grid.ColumnDefinitions>
-                                                                                <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}" Padding="0" MinWidth="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                                <ctrl:HandCursorCheckBox Grid.Column="0" IsChecked="{Binding IsSelected, Mode=TwoWay}" Padding="0" MinWidth="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                                                 <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="13" VerticalAlignment="Center"/>
                                                                                 <TextBlock Grid.Column="2" Text="{Binding Name}" FontSize="13" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                                                                 <TextBlock Grid.Column="3" Text="{Binding Chapters}" FontSize="13" VerticalAlignment="Center"/>
@@ -189,9 +190,9 @@
                                                 <StackPanel>
                                                     <TextBlock Text="Media Settings" Style="{StaticResource SectionHeaderStyle}" />
                                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                                        <RadioButton Content="Movie" GroupName="{Binding RadioGroupName}"
+                                                        <ctrl:HandCursorRadioButton Content="Movie" GroupName="{Binding RadioGroupName}"
                                                                      IsChecked="{Binding IsTvMode, Converter={StaticResource InvBool}}" />
-                                                        <RadioButton Content="TV Show" GroupName="{Binding RadioGroupName}"
+                                                        <ctrl:HandCursorRadioButton Content="TV Show" GroupName="{Binding RadioGroupName}"
                                                                      IsChecked="{Binding IsTvMode}" />
                                                     </StackPanel>
                                                     <Grid Margin="0,0,0,10">
@@ -234,7 +235,7 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="Log" Style="{StaticResource SectionHeaderStyle}" Margin="0" VerticalAlignment="Center" />
-                            <Button Grid.Column="2" Content="Clear" Style="{StaticResource BrowseButtonStyle}" Command="{Binding ClearLogCommand}" />
+                            <ctrl:HandCursorButton Grid.Column="2" Content="Clear" Style="{StaticResource BrowseButtonStyle}" Command="{Binding ClearLogCommand}" />
                         </Grid>
                         <TextBox x:Name="LogTextBox" Text="{Binding LogText, Mode=OneWay}" IsReadOnly="True"
                                  Height="180" FontFamily="Consolas" FontSize="11" Background="#1E1E1E" Foreground="#DCDCDC"
