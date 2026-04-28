@@ -4,7 +4,7 @@ namespace Ripstation.Services;
 
 public class DriveService : IDriveService
 {
-    public void EjectDrive(int wmpCdRomIndex = 0)
+    public void EjectDrive(int driveIndex = 0)
     {
         var wmpType = Type.GetTypeFromProgID("WMPlayer.OCX.7")
             ?? throw new InvalidOperationException("Windows Media Player COM object not available");
@@ -15,7 +15,7 @@ public class DriveService : IDriveService
         try
         {
             dynamic wmpDynamic = wmp;
-            dynamic drive = wmpDynamic.cdromCollection.item(wmpCdRomIndex);
+            dynamic drive = wmpDynamic.cdromCollection.item(driveIndex);
             drive.eject();
         }
         finally

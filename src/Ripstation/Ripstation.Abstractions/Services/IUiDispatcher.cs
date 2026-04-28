@@ -2,7 +2,6 @@ namespace Ripstation.Services;
 
 /// <summary>
 /// Abstracts posting work onto the UI thread.
-/// Production implementation uses WPF Dispatcher; tests use a synchronous stub.
 /// </summary>
 public interface IUiDispatcher
 {

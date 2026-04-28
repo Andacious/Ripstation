@@ -22,7 +22,7 @@ public partial class MainViewModel : ObservableObject
 
     // ── Shared settings ───────────────────────────────────────────────────────
 
-    public GlobalSettings Settings { get; } = new();
+    public GlobalSettings Settings { get; }
 
     // ── Drives ────────────────────────────────────────────────────────────────
 
@@ -54,6 +54,7 @@ public partial class MainViewModel : ObservableObject
         IHandBrakeService handBrake,
         IMediaNamingService naming,
         IDriveService driveService,
+        GlobalSettings settings,
         IUiDispatcher? dispatcher = null)
     {
         _makeMkv = makeMkv;
@@ -61,6 +62,7 @@ public partial class MainViewModel : ObservableObject
         _naming = naming;
         _driveService = driveService;
         _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
+        Settings = settings;
 
         Drives.CollectionChanged += (_, _) => OnPropertyChanged(nameof(StatusText));
         Settings.PropertyChanged += (_, _) => OnPropertyChanged(nameof(StatusText));

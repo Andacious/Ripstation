@@ -370,7 +370,7 @@ public class DriveViewModelTests
             "TINFO:0,27,0,\"title_t00.mkv\"",
         };
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.ScanDiskAsync(Arg.Any<string>(), Arg.Any<string>(),
+        makeMkv.ScanDiskAsync(Arg.Any<string>(),
                 Arg.Any<IProgress<(int, string)>?>(), Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult((
                 new Disk { Name = "BLADE_RUNNER_2049" },
@@ -390,11 +390,11 @@ public class DriveViewModelTests
     public async Task ScanAsync_OnCancel_SetsStatusCancelled()
     {
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.ScanDiskAsync(Arg.Any<string>(), Arg.Any<string>(),
+        makeMkv.ScanDiskAsync(Arg.Any<string>(),
                 Arg.Any<IProgress<(int, string)>?>(), Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(callInfo =>
             {
-                var ct = callInfo.ArgAt<CancellationToken>(4);
+                var ct = callInfo.ArgAt<CancellationToken>(3);
                 var tcs = new TaskCompletionSource<(Disk, List<Title>)>();
                 ct.Register(() => tcs.TrySetException(new OperationCanceledException(ct)));
                 return tcs.Task;
@@ -414,7 +414,7 @@ public class DriveViewModelTests
     public async Task ScanAsync_OnFailure_SetsStatusFailed()
     {
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.ScanDiskAsync(Arg.Any<string>(), Arg.Any<string>(),
+        makeMkv.ScanDiskAsync(Arg.Any<string>(),
                 Arg.Any<IProgress<(int, string)>?>(), Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns<Task<(Disk, List<Title>)>>(
                 _ => Task.FromException<(Disk, List<Title>)>(
@@ -435,8 +435,7 @@ public class DriveViewModelTests
     {
         var tcs = new TaskCompletionSource();
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(async _ => { await tcs.Task; return @"C:\mkv\t.mkv"; });
 
@@ -464,8 +463,7 @@ public class DriveViewModelTests
 
         string? capturedIntermediatePath = null;
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(callInfo =>
             {
@@ -497,8 +495,7 @@ public class DriveViewModelTests
         var fs = new FakeFileSystem(@"D:\mkv\disc0\title_t00.mkv");
 
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(@"D:\mkv\disc0\title_t00.mkv"));
 
@@ -522,8 +519,7 @@ public class DriveViewModelTests
         var fs = new FakeFileSystem(existingM4v, mkvPath);
 
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(mkvPath));
 
@@ -547,8 +543,7 @@ public class DriveViewModelTests
         var fs = new FakeFileSystem(mkvPath);
 
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(mkvPath));
 
@@ -571,8 +566,7 @@ public class DriveViewModelTests
         var settings = DefaultSettings();
         var fakeDs = new FakeDriveService();
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(@"D:\mkv\disc0\t.mkv"));
         var handBrake = Substitute.For<IHandBrakeService>();
@@ -598,8 +592,7 @@ public class DriveViewModelTests
         var cts = new CancellationTokenSource();
         var tcs = new TaskCompletionSource();
         var makeMkv = Substitute.For<IMakeMkvService>();
-        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+        makeMkv.RipTitleAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
                 Arg.Any<Action<string>>(), Arg.Any<CancellationToken>())
             .Returns(async _ => { await tcs.Task; return ""; });
 

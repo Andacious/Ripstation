@@ -12,7 +12,7 @@ public class HandBrakeServiceTests
     {
         var runner = new FakeProcessRunner(lines, exitCode, cancelled);
         var fs = new FakeFileSystem(outputExists ? [OutputFile] : []);
-        return new HandBrakeService(runner, fs);
+        return new HandBrakeService(runner, new FakeRipEngineSettings(), fs);
     }
 
     // ── Progress reporting ───────────────────────────────────────────────────
@@ -25,8 +25,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Single(reports);
@@ -42,8 +41,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Single(reports);
@@ -59,8 +57,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Single(reports);
@@ -75,8 +72,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Empty(reports);
@@ -90,8 +86,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Single(reports);
@@ -106,8 +101,7 @@ public class HandBrakeServiceTests
         var progress = new Progress<(int Percent, string Status)>(r => reports.Add(r));
         var svc = Build([line], outputExists: true);
 
-        await svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-            progress, _ => { }, default);
+        await svc.ConvertVideoAsync("in.mkv", OutputFile, progress, _ => { }, default);
         await Task.Yield();
 
         Assert.Single(reports);
@@ -121,8 +115,7 @@ public class HandBrakeServiceTests
     {
         var svc = Build([], exitCode: 1);
         await Assert.ThrowsAsync<InvalidOperationException>(
-            () => svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-                null, _ => { }, default));
+            () => svc.ConvertVideoAsync("in.mkv", OutputFile, null, _ => { }, default));
     }
 
     [Fact]
@@ -130,8 +123,7 @@ public class HandBrakeServiceTests
     {
         var svc = Build([], outputExists: false);
         await Assert.ThrowsAsync<FileNotFoundException>(
-            () => svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-                null, _ => { }, default));
+            () => svc.ConvertVideoAsync("in.mkv", OutputFile, null, _ => { }, default));
     }
 
     [Fact]
@@ -140,10 +132,9 @@ public class HandBrakeServiceTests
         var cts = new CancellationTokenSource();
         cts.Cancel();
         var runner = new FakeProcessRunner([], 0, cancelled: true);
-        var svc = new HandBrakeService(runner, new FakeFileSystem());
+        var svc = new HandBrakeService(runner, new FakeRipEngineSettings(), new FakeFileSystem());
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>(
-            () => svc.ConvertVideoAsync("in.mkv", OutputFile, "Plex", "preset.json", "hb.exe",
-                null, _ => { }, cts.Token));
+            () => svc.ConvertVideoAsync("in.mkv", OutputFile, null, _ => { }, cts.Token));
     }
 }

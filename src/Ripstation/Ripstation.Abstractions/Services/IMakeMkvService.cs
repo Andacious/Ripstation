@@ -9,7 +9,6 @@ public interface IMakeMkvService
     /// </summary>
     Task<(Disk Disk, List<Title> Titles)> ScanDiskAsync(
         string diskNumber,
-        string makeMkvExe,
         IProgress<(int Percent, string Status)>? progress,
         Action<string> log,
         CancellationToken ct);
@@ -22,7 +21,6 @@ public interface IMakeMkvService
         string titleId,
         string diskNumber,
         string outputPath,
-        string makeMkvExe,
         IProgress<(int Percent, string Status)>? progress,
         Action<string> log,
         CancellationToken ct);

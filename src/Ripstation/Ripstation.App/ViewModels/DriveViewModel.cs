@@ -38,7 +38,7 @@ public partial class DriveViewModel : ObservableObject
     /// may differ on some systems).
     /// </summary>
     [ObservableProperty]
-    private int _wmpDriveIndex;
+    private int _driveIndex;
 
     /// <summary>Drive letter from OS detection (display only, e.g. "D:\").</summary>
     [ObservableProperty]
@@ -169,7 +169,7 @@ public partial class DriveViewModel : ObservableObject
         IFileSystem? fileSystem = null)
     {
         _diskNumber = diskNumber;
-        _wmpDriveIndex = diskNumber;
+        _driveIndex = diskNumber;
         _driveLetter = driveLetter;
         _settings = settings;
         _makeMkv = makeMkv;
@@ -213,8 +213,6 @@ public partial class DriveViewModel : ObservableObject
         SelectedTitleCount = 0;
         _scanCts = new CancellationTokenSource();
 
-        var makeMkvExe = _settings.MakeMkvExePath; // snapshot before async
-
         var progress = new Progress<(int Percent, string Status)>(p =>
         {
             ScanProgress = p.Percent;
@@ -225,7 +223,7 @@ public partial class DriveViewModel : ObservableObject
         {
             Log($"Scanning disc {DiskNumber}…");
             var (disk, titles) = await _makeMkv.ScanDiskAsync(
-                DiskNumber.ToString(), makeMkvExe, progress, Log, _scanCts.Token);
+                DiskNumber.ToString(), progress, Log, _scanCts.Token);
 
             DiscName = disk.Name;
             foreach (var t in titles)
@@ -373,7 +371,7 @@ public partial class DriveViewModel : ObservableObject
 
                 var actualMkv = await _makeMkv.RipTitleAsync(
                     title.Id.ToString(), DiskNumber.ToString(),
-                    intermediateDir, s.MakeMkvExePath,
+                    intermediateDir,
                     ripProgress, Log, ct);
 
                 // ── 2. Compute output path ────────────────────────────────
@@ -402,8 +400,6 @@ public partial class DriveViewModel : ObservableObject
 
                 await _handBrake.ConvertVideoAsync(
                     actualMkv, m4vPath,
-                    s.PresetName, s.PresetFilePath,
-                    s.HandBrakeExePath,
                     ripProgress, Log, ct);
 
                 // ── 4. Clean up intermediate MKV ──────────────────────────
@@ -422,7 +418,7 @@ public partial class DriveViewModel : ObservableObject
             if (EjectWhenDone)
             {
                 Log($"[Drive {DiskNumber}] Ejecting…");
-                _driveService.EjectDrive(WmpDriveIndex);
+                _driveService.EjectDrive(DriveIndex);
             }
         }
         catch (OperationCanceledException)
@@ -480,7 +476,7 @@ public partial class DriveViewModel : ObservableObject
         try
         {
             Log($"[Drive {DiskNumber}] Ejecting…");
-            _driveService.EjectDrive(WmpDriveIndex);
+            _driveService.EjectDrive(DriveIndex);
         }
         catch (Exception ex)
         {

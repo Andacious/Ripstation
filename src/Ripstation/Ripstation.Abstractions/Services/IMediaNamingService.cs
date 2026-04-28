@@ -4,7 +4,7 @@ public interface IMediaNamingService
 {
     /// <summary>
     /// Removes invalid path characters, replaces underscores with spaces,
-    /// and title-cases the result — matching Get-TitleFileName.
+    /// and title-cases the result.
     /// </summary>
     string GetTitleFileName(string fileName);
 

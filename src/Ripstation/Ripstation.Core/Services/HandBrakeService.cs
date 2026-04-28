@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace Ripstation.Services;
 
-public partial class HandBrakeService(IProcessRunner processRunner, IFileSystem? fileSystem = null) : IHandBrakeService
+public partial class HandBrakeService(IProcessRunner processRunner, IRipEngineSettings settings, IFileSystem? fileSystem = null) : IHandBrakeService
 {
     private readonly IFileSystem _fs = fileSystem ?? new FileSystem();
     // HandBrake --json emits lines like:
@@ -16,9 +16,6 @@ public partial class HandBrakeService(IProcessRunner processRunner, IFileSystem?
     public async Task ConvertVideoAsync(
         string inputFile,
         string outputFile,
-        string presetName,
-        string presetFile,
-        string handBrakeExe,
         IProgress<(int Percent, string Status)>? progress,
         Action<string> log,
         CancellationToken ct)
@@ -51,8 +48,8 @@ public partial class HandBrakeService(IProcessRunner processRunner, IFileSystem?
             }
         }
 
-        var args = $"--preset-import-file \"{presetFile}\" -i \"{inputFile}\" -o \"{outputFile}\" --preset \"{presetName}\" --json";
-        var result = await processRunner.RunAsync(handBrakeExe, args, HandleLine, log, ct);
+        var args = $"--preset-import-file \"{settings.EncoderPresetFilePath}\" -i \"{inputFile}\" -o \"{outputFile}\" --preset \"{settings.EncoderPresetName}\" --json";
+        var result = await processRunner.RunAsync(settings.EncoderExecutablePath, args, HandleLine, log, ct);
 
         if (result.Cancelled) ct.ThrowIfCancellationRequested();
         if (result.ExitCode != 0)

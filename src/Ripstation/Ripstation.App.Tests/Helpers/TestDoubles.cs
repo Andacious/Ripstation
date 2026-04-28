@@ -45,7 +45,7 @@ public class FakeDriveService : IDriveService
         _drives = drives;
     }
 
-    public void EjectDrive(int wmpCdRomIndex) => EjectedIndices.Add(wmpCdRomIndex);
+    public void EjectDrive(int driveIndex) => EjectedIndices.Add(driveIndex);
     public IReadOnlyList<(int DiscIndex, string DrivePath)> GetOpticalDrives() => _drives;
     public string GetVolumeLabel(string drivePath) => string.Empty;
 }

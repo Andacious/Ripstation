@@ -54,3 +54,14 @@ public class FakeFileSystem : IFileSystem
     // Directories always "exist" in tests — the OS path checks are an integration concern
     public bool DirectoryExists(string path) => true;
 }
+
+/// <summary>
+/// Stub IRipEngineSettings for tests — provides plausible but non-existent paths.
+/// </summary>
+public class FakeRipEngineSettings : IRipEngineSettings
+{
+    public string RipperExecutablePath  { get; init; } = "makemkvcon64.exe";
+    public string EncoderExecutablePath { get; init; } = "HandBrakeCLI.exe";
+    public string EncoderPresetName     { get; init; } = "Plex";
+    public string EncoderPresetFilePath { get; init; } = "preset.json";
+}

@@ -9,22 +9,14 @@ public class GlobalSettingsTests
     {
         var s = new GlobalSettings
         {
-            MakeMkvExePath  = @"C:\tools\makemkvcon64.exe",
-            HandBrakeExePath = @"C:\tools\HandBrakeCLI.exe",
-            PresetFilePath  = @"C:\presets\Plex.json",
-            PresetName      = "CustomPreset",
             IntermediatePath = @"D:\mkv",
-            OutputPath      = @"E:\movies",
+            OutputPath       = @"E:\movies",
         };
 
         var snap = s.Snapshot();
 
-        Assert.Equal(@"C:\tools\makemkvcon64.exe",  snap.MakeMkvExePath);
-        Assert.Equal(@"C:\tools\HandBrakeCLI.exe",   snap.HandBrakeExePath);
-        Assert.Equal(@"C:\presets\Plex.json",         snap.PresetFilePath);
-        Assert.Equal("CustomPreset",                  snap.PresetName);
-        Assert.Equal(@"D:\mkv",                       snap.IntermediatePath);
-        Assert.Equal(@"E:\movies",                    snap.OutputPath);
+        Assert.Equal(@"D:\mkv",     snap.IntermediatePath);
+        Assert.Equal(@"E:\movies",  snap.OutputPath);
     }
 
     [Fact]

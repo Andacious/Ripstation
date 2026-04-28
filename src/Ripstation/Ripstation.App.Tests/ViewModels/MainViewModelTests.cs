@@ -12,13 +12,15 @@ public class MainViewModelTests
         FakeDriveService? driveService = null,
         IMakeMkvService? makeMkv = null,
         IHandBrakeService? handBrake = null,
-        IMediaNamingService? naming = null)
+        IMediaNamingService? naming = null,
+        GlobalSettings? settings = null)
     {
         return new MainViewModel(
             makeMkv ?? Substitute.For<IMakeMkvService>(),
             handBrake ?? Substitute.For<IHandBrakeService>(),
             naming ?? new MediaNamingService(),
             driveService ?? new FakeDriveService(),
+            settings ?? new GlobalSettings(),
             dispatcher: new SynchronousDispatcher());
     }
 
@@ -140,7 +142,7 @@ public class MainViewModelTests
         // Neither drive should have started ripping
         await makeMkv.DidNotReceive().RipTitleAsync(
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<IProgress<(int, string)>?>(),
+            Arg.Any<IProgress<(int, string)>?>(),
             Arg.Any<Action<string>>(), Arg.Any<CancellationToken>());
     }
 

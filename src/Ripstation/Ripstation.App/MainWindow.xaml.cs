@@ -17,13 +17,14 @@ public sealed partial class MainWindow : Window
         IMakeMkvService makeMkv,
         IHandBrakeService handBrake,
         IMediaNamingService naming,
-        IDriveService drive)
+        IDriveService drive,
+        GlobalSettings settings)
     {
         InitializeComponent();
         Title = "Ripstation";
 
         var dispatcher = new WinUIDispatcher(DispatcherQueue.GetForCurrentThread());
-        _vm = new MainViewModel(makeMkv, handBrake, naming, drive, dispatcher);
+        _vm = new MainViewModel(makeMkv, handBrake, naming, drive, settings, dispatcher);
         RootGrid.DataContext = _vm;
 
         AppWindow.Resize(new SizeInt32(1100, 860));

@@ -3,7 +3,7 @@ using Ripstation.Models;
 
 namespace Ripstation.Services;
 
-public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? fileSystem = null) : IMakeMkvService
+public partial class MakeMkvService(IProcessRunner processRunner, IRipEngineSettings settings, IFileSystem? fileSystem = null) : IMakeMkvService
 {
     private readonly IFileSystem _fs = fileSystem ?? new FileSystem();
     // CINFO:code,flags,"value"
@@ -28,7 +28,6 @@ public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? f
 
     public async Task<(Disk Disk, List<Title> Titles)> ScanDiskAsync(
         string diskNumber,
-        string makeMkvExe,
         IProgress<(int Percent, string Status)>? progress,
         Action<string> log,
         CancellationToken ct)
@@ -83,7 +82,7 @@ public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? f
         }
 
         var args = $"--robot --cache=1024 --messages=-stdout --progress=-same --minlength=600 info disc:{diskNumber}";
-        var result = await processRunner.RunAsync(makeMkvExe, args, HandleLine, onStderr: null, ct);
+        var result = await processRunner.RunAsync(settings.RipperExecutablePath, args, HandleLine, onStderr: null, ct);
 
         if (result.Cancelled) ct.ThrowIfCancellationRequested();
         if (result.ExitCode != 0)
@@ -102,7 +101,6 @@ public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? f
         string titleId,
         string diskNumber,
         string outputPath,
-        string makeMkvExe,
         IProgress<(int Percent, string Status)>? progress,
         Action<string> log,
         CancellationToken ct)
@@ -147,7 +145,7 @@ public partial class MakeMkvService(IProcessRunner processRunner, IFileSystem? f
         }
 
         var args = $"--robot --noscan --cache=1024 --messages=-stdout --progress=-same --minlength=600 mkv disc:{diskNumber} {titleId} \"{outputPath}\"";
-        var result = await processRunner.RunAsync(makeMkvExe, args, HandleLine, onStderr: null, ct);
+        var result = await processRunner.RunAsync(settings.RipperExecutablePath, args, HandleLine, onStderr: null, ct);
 
         if (result.Cancelled) ct.ThrowIfCancellationRequested();
         if (result.ExitCode != 0)

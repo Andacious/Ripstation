@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using Ripstation.Services;
 
 #pragma warning disable MVVMTK0045 // Use partial property — AOT compat only; reflection bindings work fine
 
@@ -8,7 +9,7 @@ namespace Ripstation.ViewModels;
 /// Settings shared across all drive rip sessions. Captured as a snapshot at
 /// the start of each operation so mid-run edits never affect an active rip.
 /// </summary>
-public partial class GlobalSettings : ObservableObject
+public partial class GlobalSettings : ObservableObject, IRipEngineSettings
 {
     [ObservableProperty]
     private string _makeMkvExePath =
@@ -41,16 +42,16 @@ public partial class GlobalSettings : ObservableObject
             Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
             "Ripstation");
 
-    /// <summary>Immutable snapshot of current values for use during an operation.</summary>
-    public SettingsSnapshot Snapshot() => new(
-        MakeMkvExePath, HandBrakeExePath, PresetFilePath, PresetName,
-        IntermediatePath, OutputPath);
+    // IRipEngineSettings — maps observable properties to the interface
+    string IRipEngineSettings.RipperExecutablePath  => MakeMkvExePath;
+    string IRipEngineSettings.EncoderExecutablePath => HandBrakeExePath;
+    string IRipEngineSettings.EncoderPresetName     => PresetName;
+    string IRipEngineSettings.EncoderPresetFilePath => PresetFilePath;
+
+    /// <summary>Immutable snapshot of path settings for use during an operation.</summary>
+    public SettingsSnapshot Snapshot() => new(IntermediatePath, OutputPath);
 }
 
 public sealed record SettingsSnapshot(
-    string MakeMkvExePath,
-    string HandBrakeExePath,
-    string PresetFilePath,
-    string PresetName,
     string IntermediatePath,
     string OutputPath);
