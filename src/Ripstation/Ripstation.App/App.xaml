@@ -31,6 +31,22 @@
                     <SolidColorBrush x:Key="ProgressTrackBrush"      Color="#3C3C3C" />
                     <SolidColorBrush x:Key="StatusBarBrush"          Color="#1A1A1A" />
                     <SolidColorBrush x:Key="StatusBarBorderBrush"    Color="#3C3C3C" />
+                    <!-- TextBox system resource overrides — keeps dark bg on hover/focus -->
+                    <SolidColorBrush x:Key="TextControlBackground"                  Color="#2D2D2D" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver"       Color="#3A3A3A" />
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused"           Color="#2D2D2D" />
+                    <SolidColorBrush x:Key="TextControlBackgroundDisabled"          Color="#232323" />
+                    <SolidColorBrush x:Key="TextControlForeground"                  Color="#F3F3F3" />
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver"       Color="#F3F3F3" />
+                    <SolidColorBrush x:Key="TextControlForegroundFocused"           Color="#F3F3F3" />
+                    <SolidColorBrush x:Key="TextControlForegroundDisabled"          Color="#666666" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForeground"             Color="#ABABAB" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver"  Color="#ABABAB" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused"      Color="#888888" />
+                    <SolidColorBrush x:Key="TextControlBorderBrush"                 Color="#555555" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver"      Color="#777777" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused"          Color="#4DA6FF" />
+                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor"     Color="#1A3C5C" />
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Light">
@@ -57,6 +73,22 @@
                     <SolidColorBrush x:Key="ProgressTrackBrush"     Color="#E0E0E0" />
                     <SolidColorBrush x:Key="StatusBarBrush"         Color="#E8E8E8" />
                     <SolidColorBrush x:Key="StatusBarBorderBrush"   Color="#D0D0D0" />
+                    <!-- TextBox system resource overrides — keeps light bg on hover/focus -->
+                    <SolidColorBrush x:Key="TextControlBackground"                  Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="TextControlBackgroundPointerOver"       Color="#F5F5F5" />
+                    <SolidColorBrush x:Key="TextControlBackgroundFocused"           Color="#FFFFFF" />
+                    <SolidColorBrush x:Key="TextControlBackgroundDisabled"          Color="#F0F0F0" />
+                    <SolidColorBrush x:Key="TextControlForeground"                  Color="#1A1A1A" />
+                    <SolidColorBrush x:Key="TextControlForegroundPointerOver"       Color="#1A1A1A" />
+                    <SolidColorBrush x:Key="TextControlForegroundFocused"           Color="#1A1A1A" />
+                    <SolidColorBrush x:Key="TextControlForegroundDisabled"          Color="#AAAAAA" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForeground"             Color="#767676" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver"  Color="#767676" />
+                    <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused"      Color="#999999" />
+                    <SolidColorBrush x:Key="TextControlBorderBrush"                 Color="#CCCCCC" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver"      Color="#AAAAAA" />
+                    <SolidColorBrush x:Key="TextControlBorderBrushFocused"          Color="#0067C0" />
+                    <SolidColorBrush x:Key="TextControlSelectionHighlightColor"     Color="#CCE0F5" />
                 </ResourceDictionary>
 
             </ResourceDictionary.ThemeDictionaries>
